@@ -57,39 +57,99 @@ that can be reflected in the React App. I think that the `Game` object should
 be able to run on its own (unit tests)
 
 
-```
+```js
 interface Coords {
   x: number,
   y: number
 }
 ```
 
-```
-// m - width of grid
-// n - height of grid
-// p - number of mines
+```js
+class Game {
 
-class Game(m: number, n: number, p: number)
-- _generateMines(m: number, n: number, p: number): Coords[]
-- _generateAnswer(m: number, n: number, mines: Coords[]): Grid
-- answer: Grid
-- uncoverCell(c: Coords): boolean
-- flagCell(c: Coords): boolean
-- getCellDisplay(c: Coords): CellDisplay
+  // m - width of grid
+  // n - height of grid
+  // p - number of mines
+  Game(m: number, n: number, p: number);
+
+  // generates a Grid that maintains state of the mine grid
+  _generateAnswer(m: number, n: number, mines: Coords[]): Grid;
+
+  // grid generator instance
+  _generator: GridGenerator;
+
+  // grid instance
+  _grid: Grid;
+
+  // uncovers a cell at a set of coordinates
+  //  - updates the grid accordingly
+  //  - getCellDisplay() will return different values
+  uncoverCell(c: Coords): boolean;
+
+  // flags a cell as a possible mine
+  flagCell(c: Coords): boolean;
+
+  // returns a value to help determine what the current "player view" is
+  getCellDisplay(c: Coords): CellDisplay;
+}
 ```
 
+```js
+class GraphicalGridGenerator {
+
+  GraphicalGridGenerator(): GraphicalGridGenerator;
+
+  // generates a Grid given an (m x n) size array
+  //  - any expression that evaluates to 'true' in grid will generate a mine
+  generate(graphic: any[][]): Grid;
+}
 ```
-class GridGenerator()
-- generate(m: number, n: number, mines: Coords[]): Grid
-- _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
+
+```js
+class GridGenerator {
+
+  GridGenerator(): GridGenerator;
+
+  // generates a new Grid
+  generate(m: number, n: number, mines: Coords[]): Grid
+
+  // generates an array of coordinates representing where mines are on an (m x n) grid
+  //  - should throw error if (p >= m*n)
+  //  - should return unique coordinates
+  //    -  no two coords should have same x and y value
+  //  - should return an array of length equal to p
+  _generateMines(m: number, n: number, p: number): Coords[];
+
+
+  // calculates the number of adjacent mines for all non-mine cells
+  //  - should correctly label
+  _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
+
+}
 ```
 
 
-```
-class Grid(states: CellState[][], values: CellValue[][])
-- getCellValue(c: Coords): CellValue
-- getCellState(c: Coords): CellState
-- setCellState(c: Coords, state: CellState)
+```js
+class Grid {
+
+  Grid(states: CellState[][], values: CellValue[][]): Grid;
+
+  // returns the "answer" for a given cell
+  //  - 'MINE' denotes a mine
+  //  - any other value can be parsed into a number equalling the number of adjacent mines
+  getCellValue(c: Coords): CellValue;
+
+  // returns the state for a given cell
+  //  - 0: cell has not been uncovered
+  //  - 1: cell has been uncovered or "swept"
+  //  - 2: cell has been flagged as a potential mine
+  getCellState(c: Coords): CellState;
+
+  // sets the state for a given cell
+  setCellState(c: Coords, state: CellState)
+
+}
+
 ```
 
 ```
