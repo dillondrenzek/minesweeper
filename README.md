@@ -72,21 +72,25 @@ class Game {
   // p - number of mines
   Game(m: number, n: number, p: number);
 
-  // generates a Grid that maintains state of the mine grid
-  _generateAnswer(m: number, n: number, mines: Coords[]): Grid;
-
   // grid generator instance
   _generator: GridGenerator;
 
   // grid instance
   _grid: Grid;
 
+  // generates a Grid that maintains state of the mine grid
+  _generateAnswer(m: number, n: number, mines: Coords[]): Grid;
+
   // uncovers a cell at a set of coordinates
   //  - updates the grid accordingly
   //  - getCellDisplay() will return different values
+  //  - should increment the number of flags available after uncovering a flagged cell
   uncoverCell(c: Coords): boolean;
 
   // flags a cell as a possible mine
+  //  - should flag the cell at c if it is unflagged
+  //  - should unflag the cell at c if it is flagged
+  //  - should do nothing if the cell at C is uncovered
   flagCell(c: Coords): boolean;
 
   // returns a value to help determine what the current "player view" is
@@ -94,13 +98,60 @@ class Game {
 }
 ```
 
+
+```js
+class Grid {
+
+  Grid(states: CellState[][], values: CellValue[][]): Grid;
+
+  // returns the "answer" for a given cell
+  //  - 'MINE' denotes a mine
+  //  - any other value can be parsed into a number equalling the number of adjacent mines
+  getCellValue(c: Coords): CellValue;
+
+  // returns the state for a given cell
+  getCellState(c: Coords): CellState;
+
+  // sets the state for a given cell
+  setCellState(c: Coords, state: CellState)
+
+  // returns true if cell at c is flagged
+  isCellFlagged(c: Coords): boolean
+
+  // returns true if cell at c is covered
+  isCellCovered(c: Coords): boolean
+
+  // returns true if cell at c is a mine
+  isCellMine(c: Coords): boolean
+
+}
+
+```
+
+```
+
+type CellDisplay = 'FLAG' | 'COVERED' | CellValue
+
+type CellValue = 'MINE' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+
+//  - 0: cell has not been uncovered
+//  - 1: cell has been uncovered or "swept"
+//  - 2: cell has been flagged as a potential mine
+enum CellState {
+  0: "covered",
+  1: "swept",  
+  2: "flagged"
+}
+```
+
+
 ```js
 class GraphicalGridGenerator {
 
   GraphicalGridGenerator(): GraphicalGridGenerator;
 
   // generates a Grid given an (m x n) size array
-  //  - any expression that evaluates to 'true' in grid will generate a mine
+  // NOTE: any expression that evaluates to 'true' in grid will generate a mine
   generate(graphic: any[][]): Grid;
 }
 ```
@@ -125,42 +176,5 @@ class GridGenerator {
   //  - should correctly label
   _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
 
-}
-```
-
-
-```js
-class Grid {
-
-  Grid(states: CellState[][], values: CellValue[][]): Grid;
-
-  // returns the "answer" for a given cell
-  //  - 'MINE' denotes a mine
-  //  - any other value can be parsed into a number equalling the number of adjacent mines
-  getCellValue(c: Coords): CellValue;
-
-  // returns the state for a given cell
-  //  - 0: cell has not been uncovered
-  //  - 1: cell has been uncovered or "swept"
-  //  - 2: cell has been flagged as a potential mine
-  getCellState(c: Coords): CellState;
-
-  // sets the state for a given cell
-  setCellState(c: Coords, state: CellState)
-
-}
-
-```
-
-```
-
-type CellDisplay = 'FLAG' | 'COVERED' | CellValue
-
-type CellValue = 'MINE' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
-
-enum CellState {
-  0: "covered",
-  1: "swept",  
-  2: "flagged"
 }
 ```
