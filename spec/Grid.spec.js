@@ -5,24 +5,30 @@ const M = CellValue.Mine;
 
 describe('Grid', () => {
 
-  let states;
-  let values;
-  let m, n, mines;
-  let grid;
+  let width, height, mines, grid;
 
-  describe('initialized with mines', () => {
+  beforeEach(() => {
+    width = 3;
+    height = 3;
+    mines = [new Coords(0,0), new Coords(0,1), new Coords(2,2)];
+    grid = new Grid(width, height, mines);
+  });
 
-    beforeEach(() => {
-      m = 8;
-      n = 12;
-      mines = Grid.generateMines(8, 12, 10);
-      grid = new Grid(m, n, mines);
-    });
+  describe('initialized with a width, height, and array of coordinate locations for mines', () => {
 
-    it('should have a size equal to (m x n)', () => {
-      let {width, height} = grid.size;
-      expect(width).toEqual(m);
-      expect(height).toEqual(n)
+    describe('should have a size equal to (m x n)', () => {
+      let wd, ht;
+
+      beforeEach(() => {
+        wd = grid.size.width;
+        ht = grid.size.height;
+      });
+      it('with the correct width', () => {
+        expect(wd).toEqual(width);
+      });
+      it('with the correct height', () => {
+        expect(ht).toEqual(height);
+      });
     });
 
     it('should have the correct number of mines', () => {
@@ -36,21 +42,58 @@ describe('Grid', () => {
     });
 
     it('should initialize state of all cells to covered', () => {
-      for(let i = 0; i < m; i++) {
-        for(let j = 0; j < n; j++) {
+      for(let i = 0; i < width; i++) {
+        for(let j = 0; j < height; j++) {
           expect(grid.getCellState({x: i, y: j})).toBeDefined();
         }
       }
     });
 
     it('should calculate a CellValue for each cell', () => {
-      for(let i = 0; i < m; i++) {
-        for(let j = 0; j < n; j++) {
+      for(let i = 0; i < width; i++) {
+        for(let j = 0; j < height; j++) {
           expect(grid.getCellValue({x: i, y: j})).toBeDefined();
         }
       }
     });
 
+  });
+
+
+  describe('toString()', () => {
+    let rowSeparator = '\n';
+    let itemSeparator = ' ';
+    let result, result_values;
+    beforeEach(() => {
+      result = grid.toString();
+      result_values = result.split(rowSeparator).map((row_str) => row_str.split(itemSeparator));
+    });
+
+    it('should output each row separated by a new-line character', () => {
+      // expect length array returned when split result string by '\n' to equal height of grid
+      expect(result_values.length).toEqual(grid.size.height);
+    });
+
+    it('should output each item in a row separated by a space', () => {
+      // for each row of output string
+      result_values.forEach((row) => {
+        // expect the number of items separated by the `itemSeparator` to equal the width of the grid
+        expect(row.length).toEqual(grid.size.width);
+      });
+    });
+
+    it('should output the correct items in their respective coordinates', () => {
+      // for each row of output string
+      result_values.forEach((row) => {
+        // for each item in the row
+        row.forEach((item) => {
+          let c = new Coords(row.indexOf(item), result_values.indexOf(row));
+          // expect the items value to equal the value at the given grid coordinate
+          let expected = grid.getCellValue(c);
+          expect(item).toEqual(expected.toString());
+        });
+      });
+    });
   });
 });
 

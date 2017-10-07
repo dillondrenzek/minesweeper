@@ -96,6 +96,13 @@ class Grid {
     return this._states;
   }
 
+  toString() {
+    let itemSeparator = ' ',
+        rowSeparator = '\n';
+    return this.values
+      .map((row) => row.join(itemSeparator))
+      .join(rowSeparator);
+  }
 
   // @return {CellValue:number}
   getCellValue(coords) {
