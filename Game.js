@@ -1,5 +1,11 @@
 const Grid = require('./Grid');
 
+const CellDisplay = {
+  Covered: 'O',
+  Flagged: 'F',
+  Uncovered: '_'
+}
+
 class Game {
 
 
@@ -14,7 +20,11 @@ class Game {
     return this.numMines - this.flags.length;
   }
 
+  get cellDisplays() {
+    return [[]];
+  }
+
   toString() {}
 }
 
-module.exports = Game;
+module.exports = {Game, CellDisplay};

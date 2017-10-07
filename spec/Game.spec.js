@@ -1,4 +1,4 @@
-const Game = require('../Game'),
+const {Game, CellDisplay} = require('../Game'),
   Grid = require('../Grid');
 
 describe('Game', () => {
@@ -67,6 +67,26 @@ describe('Game', () => {
 
     xdescribe('when attempting to flag an unflagged cell with 0 flags remaining', () => {
       xit('should not decrement value', () => {});
+    });
+  });
+
+  describe('maintains cell display matrix', () => {
+    describe('when game initialized', () => {
+      it('should be the correct size', () => {
+        // expect correct height
+        expect(game.cellDisplays.length).toEqual(height);
+        game.cellDisplays.forEach((row) => {
+          // expect corrrent width
+          expect(row.length).toEqual(width);
+        });
+      });
+      it('all cells should be covered', () => {
+        game.cellDisplays.forEach((row) => {
+          row.forEach((item) => {
+            expect(item).toEqual(CellDisplay.Covered);
+          });
+        });
+      });
     });
   });
 
