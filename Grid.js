@@ -34,14 +34,10 @@ const seedMatrix = (size, val) => {
 const calculateCellValues = (size, mines) => {
   let values = seedMatrix(size, 0);
 
-  const isMine = (x, y) => {
+  // determines if cell at (x,y) should be marked as a mine
+  const shouldBeMine = (x, y) => {
     return mines.find((e) => (e.x === x && e.y === y));
   };
-
-  // console.log('---');
-  // console.log('size', size);
-  // console.log('mines', mines);
-  // console.log('values', values, '\n');
 
   // for each mine, increment its adjacent non-mine cells
   for (let mine of mines) {
@@ -60,7 +56,7 @@ const calculateCellValues = (size, mines) => {
             (i2 >= values.length || j2 >= values[i2].length))
             continue;
           // increment if not a mine
-          if (!isMine(j2, i2)) values[i2][j2] += 1;
+          if (!shouldBeMine(j2, i2)) values[i2][j2] += 1;
         } else {
           // mark as mine
           values[mine.y][mine.x] = MINE;
@@ -76,10 +72,14 @@ const calculateCellValues = (size, mines) => {
 //
 class Grid {
 
-  // Initialization Methods
-
+  // @param {number} width
+  // @param {number} height
+  // @param {Coords[]} mines
   constructor(width, height, mines) {
+    // create size object
     this.size = {width, height};
+
+    // set mines array
     this.mines = mines;
 
     // set states to all grid 'covered'
@@ -97,6 +97,7 @@ class Grid {
     return this._states;
   }
 
+  // @return {string} - representation of the grid
   toString() {
     let itemSeparator = ' ',
         rowSeparator = '\n';
@@ -105,7 +106,7 @@ class Grid {
       .join(rowSeparator);
   }
 
-  // @return {CellValue:number}
+  // @return {number | 'M'}
   getCellValue(coords) {
     return this.values[coords.y][coords.x];
   }
@@ -143,43 +144,9 @@ class Grid {
   // @return {Grid}
   static generate(width, height, numMines) {
     // Coords[]
-    const mines = Grid.generateMines(width, height, numMines);
-
-
+    const mines = Coords.generateMany(width, height, numMines);
     return new Grid(width, height, mines)
   }
-
-  // @return {Coords[]}
-  static generateMines(xmax, ymax, num) {
-    return Coords.generateMany(xmax, ymax, num);
-  }
-
-  // @return {CellValue[width][height]}
-  static generateCellValues(width, height, mines_coords) {
-
-    let values = [];
-
-    // construct blank values grid of correct size
-    for (let x = 0; x < width; x++) {
-      let mine_y_coords = mines_coords.filter(c => c.x === x).map(c => c.y);
-      for (let y = 0; y < height; y++) {
-        let col = [];
-        if (mine_y_coords.indexOf(y) !== -1) {
-          col.push(MINE);
-        } else {
-
-        }
-      }
-      values.push(col);
-    }
-
-
-    // for each mine, increment value of each adjacent square
-
-
-
-  }
-
 
 }
 

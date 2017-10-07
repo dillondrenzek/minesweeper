@@ -4,6 +4,10 @@
 const { Coords } = require('./Coords');
 const { Grid, consoleOutputGrid } = require('./Grid');
 
+// Start Up
+console.log('Starting Minesweeper');
+
+
 // M 2 0
 // M 3 1
 // 1 2 M
@@ -17,4 +21,4 @@ let mines = [
 ];
 let grid = new Grid(height, width, mines);
 
-console.log(grid);
+console.log(grid.toString());

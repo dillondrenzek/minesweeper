@@ -64,8 +64,25 @@ interface Coords {
 }
 ```
 
+Game Public Properties
+- num of cells wide
+- num of cells high
+- num of mines in grid
+- num of flags remaining
+- uncoverCell()
+- flagCell()
+
+
 ```js
+
+
 class Game {
+
+  get width(): number;
+  get height(): number;
+  get numMines(): number;
+  get flagsRemaining(): number;
+  get display(): CellDisplay[][];
 
   // m - width of grid
   // n - height of grid
@@ -93,61 +110,25 @@ class Game {
   //  - should do nothing if the cell at C is uncovered
   flagCell(c: Coords): boolean;
 
+  // outputs a string that depicts the game as it appears to the user
+  toString(): string;
+
   // returns a value to help determine what the current "player view" is
-  getCellDisplay(c: Coords): CellDisplay;
+  getCell(x: number, y: number): CellDisplay;
 }
 ```
 
 
-```js
-class Grid {
-
-  Grid(states: CellState[][], values: CellValue[][]): Grid;
-
-  // returns the "answer" for a given cell
-  //  - 'MINE' denotes a mine
-  //  - any other value can be parsed into a number equalling the number of adjacent mines
-  getCellValue(c: Coords): CellValue;
-
-  // returns the state for a given cell
-  getCellState(c: Coords): CellState;
-
-  // sets the state for a given cell
-  setCellState(c: Coords, state: CellState)
-
-  // returns true if cell at c is flagged
-  isCellFlagged(c: Coords): boolean
-
-  // returns true if cell at c is covered
-  isCellCovered(c: Coords): boolean
-
-  // returns true if cell at c is a mine
-  isCellMine(c: Coords): boolean
-
-  // generates a new Grid
-  static generate(m: number, n: number, p: number): Grid
-
-  // generates an array of coordinates representing where mines are on an (m x n) grid
-  //  - should throw error if (p >= m*n)
-  //  - should return unique coordinates
-  //    -  no two coords should have same x and y value
-  //  - should return an array of length equal to p
-  static generateMines(m: number, n: number, p: number): Coords[];
-
-  _generateCoords(m: number, n: number, exclude: Coord[]): Coords
-
-  // calculates the number of adjacent mines for all non-mine cells
-  //  - should correctly label
-  _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
-}
-
 ```
+// Cell Display is what is visible to the user
+// 'M' - Mine / Triggered Mine
+// 'F' - Flag
+// 'O'- Covered
+// '1-8' - Uncovered with a value
+//  'X'- Uncovered without a value
+type CellDisplay = 'M' | 'F' |
 
-```
-
-type CellDisplay = 'FLAG' | 'COVERED' | CellValue
-
-type CellValue = 'M' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+type CellValue = 'M' | [0-8]
 
 //  - 0: cell has been uncovered or "swept"
 //  - 1: cell is covered
