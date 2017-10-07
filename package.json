@@ -10,7 +10,6 @@
   "author": "Dillon Drenzek",
   "license": "ISC",
   "devDependencies": {
-    "jasmine": "2.8.0",
-    "typescript": "2.5.3"
+    "jasmine": "2.8.0"
   }
 }

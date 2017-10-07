@@ -124,6 +124,21 @@ class Grid {
   // returns true if cell at c is a mine
   isCellMine(c: Coords): boolean
 
+  // generates a new Grid
+  static generate(m: number, n: number, p: number): Grid
+
+  // generates an array of coordinates representing where mines are on an (m x n) grid
+  //  - should throw error if (p >= m*n)
+  //  - should return unique coordinates
+  //    -  no two coords should have same x and y value
+  //  - should return an array of length equal to p
+  static generateMines(m: number, n: number, p: number): Coords[];
+
+  _generateCoords(m: number, n: number, exclude: Coord[]): Coords
+
+  // calculates the number of adjacent mines for all non-mine cells
+  //  - should correctly label
+  _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
 }
 
 ```
@@ -132,17 +147,25 @@ class Grid {
 
 type CellDisplay = 'FLAG' | 'COVERED' | CellValue
 
-type CellValue = 'MINE' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+type CellValue = 'M' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
 
-//  - 0: cell has not been uncovered
-//  - 1: cell has been uncovered or "swept"
-//  - 2: cell has been flagged as a potential mine
+//  - 0: cell has been uncovered or "swept"
+//  - 1: cell is covered
+//  - 2: cell is covered, has been flagged as a potential mine
 enum CellState {
   0: "covered",
   1: "swept",  
   2: "flagged"
 }
 ```
+
+
+
+
+
+
+
+
 
 
 ```js
@@ -153,28 +176,5 @@ class GraphicalGridGenerator {
   // generates a Grid given an (m x n) size array
   // NOTE: any expression that evaluates to 'true' in grid will generate a mine
   generate(graphic: any[][]): Grid;
-}
-```
-
-```js
-class GridGenerator {
-
-  GridGenerator(): GridGenerator;
-
-  // generates a new Grid
-  generate(m: number, n: number, mines: Coords[]): Grid
-
-  // generates an array of coordinates representing where mines are on an (m x n) grid
-  //  - should throw error if (p >= m*n)
-  //  - should return unique coordinates
-  //    -  no two coords should have same x and y value
-  //  - should return an array of length equal to p
-  _generateMines(m: number, n: number, p: number): Coords[];
-
-
-  // calculates the number of adjacent mines for all non-mine cells
-  //  - should correctly label
-  _calculateCellValues(m: number, n: number, mines: Coords[]): CellValue[][]
-
 }
 ```
