@@ -1,6 +1,5 @@
-const {Grid, CellState, CellValue, calculateCellValues, seedMatrix} = require('../Grid');
+const {Grid, CellState, MINE, calculateCellValues, seedMatrix} = require('../Grid');
 const {Coords} = require('../Coords');
-const M = CellValue.Mine;
 
 
 describe('Grid', () => {
@@ -129,9 +128,9 @@ describe('calculateCellValues()', () => {
 
     beforeEach(() => {
       expected = [
-        [M, 2, 0],
-        [M, 3, 1],
-        [1, 2, M]
+        [MINE, 2, 0],
+        [MINE, 3, 1],
+        [1, 2, MINE]
       ];
       result = calculateCellValues(size, [
         new Coords(0,0), new Coords(0,1), new Coords(2,2)]);

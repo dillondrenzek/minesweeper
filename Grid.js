@@ -5,8 +5,9 @@ const CellState = {
   Covered: 1,
   Flagged: 2,
 };
-const CellValue = { Mine: 'M',
-'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8};
+
+// Value of a Mine in a grid
+const MINE = 'M';
 
 // Seeds a two-dimensional array
 // @param {width, height} size - size of the matrix
@@ -62,7 +63,7 @@ const calculateCellValues = (size, mines) => {
           if (!isMine(j2, i2)) values[i2][j2] += 1;
         } else {
           // mark as mine
-          values[mine.y][mine.x] = CellValue.Mine;
+          values[mine.y][mine.x] = MINE;
         }
       }
     }
@@ -133,7 +134,7 @@ class Grid {
 
   // @return {boolean}
   isCellMine(coords) {
-    return this.getCellValue(coords) === CellValue.Mine;
+    return this.getCellValue(coords) === MINE;
   }
 
 
@@ -164,7 +165,7 @@ class Grid {
       for (let y = 0; y < height; y++) {
         let col = [];
         if (mine_y_coords.indexOf(y) !== -1) {
-          col.push(CellValue.Mine);
+          col.push(MINE);
         } else {
 
         }
@@ -182,4 +183,4 @@ class Grid {
 
 }
 
-module.exports = {Grid, CellState, CellValue, calculateCellValues, seedMatrix};
+module.exports = {Grid, CellState, MINE, calculateCellValues, seedMatrix};
