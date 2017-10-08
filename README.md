@@ -59,7 +59,9 @@ be able to run on its own (unit tests)
 ### Game
 
 #### Properties
-- **static** generate(GameConfig)
+- **static** generate(c: GameConfig)
+- **static** isValidGameConfig(c: GameConfig)
+- **static** isValidGameState(s: GameState)
 - new(GameState)
 - uncover(x, y)
 - flag(x, y)
@@ -68,12 +70,20 @@ be able to run on its own (unit tests)
 #### Requirements
 
 1. is constructed with a GameState object
-  - **INVALID IF** numMines > width*height
-  - **INVALID IF** states.size !== values.size
+
+
   - should have a `width`
   - should have a `height`
   1. has a grid with display information for each cell
     - should be initialized `Covered` for each cell
+
+1. validates `GameState`
+  1. INVALID IF
+    - `states.height !== values.height || states.width !== values.width`
+
+1. validates `GameConfig`
+  1. INVALID IF
+    - `numMines > width * height`
 
 1. allows user to uncover cells
   1. when the cell is already uncovered
@@ -146,6 +156,8 @@ be able to run on its own (unit tests)
 
 #### Properties
 - **static** generate(width: number, height: number, val: T)
+- **static** equal(a: Grid, b: Grid): boolean
+- **static** validMatrix(arr: T[][]): boolean
 - new(T[][])
 - toString(rowSeparator: string, itemSeparator: string)
 - get width(): number

@@ -111,43 +111,21 @@ class Grid {
   }
 
 
-  //
-  // // @return {number | 'M'}
-  // getCellValue(coords) {
-  //   return this.values[coords.y][coords.x];
-  // }
-  //
-  // // @return {CellState:number}
-  // getCellState(coords) {
-  //   return this.states[coords.y][coords.x];
-  // }
-  //
-  // // @return {void}
-  // setCellState(coords, state) {
-  //   this._states[coords.y][coords.x] = state;
-  // }
-  //
-  // // @return {boolean}
-  // isCellFlagged(coords) {
-  //   return this.getCellState(coords) === CellState.Flagged;
-  // }
-  //
-  // // @return {boolean}
-  // isCellCovered(coords) {
-  //   let st = this.getCellState(coords);
-  //   return st === CellState.Covered
-  //       || st === CellState.Flagged;
-  // }
-  //
-  // // @return {boolean}
-  // isCellMine(coords) {
-  //   return this.getCellValue(coords) === MINE;
-  // }
-  //
-  //
-  // // STATIC METHODS
-  //
-  // // @return {Grid}
+
+  // [UNTESTED]
+  forEach(fn) {
+    for(let i = 0; i < this.height; i++) {
+      for(let j = 0; j < this.width; j++) {
+        fn(this.get(j,i), j, i);
+      }
+    }
+  }
+
+
+  // STATIC METHODS
+
+  // @return {Grid}
+
   // static generate(width, height, numMines) {
   //   // Coords[]
   //   const mines = Coords.generateMany(width, height, numMines);

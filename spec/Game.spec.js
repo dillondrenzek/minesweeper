@@ -1,18 +1,41 @@
 const {Game, CellDisplay} = require('../Game'),
-  Grid = require('../Grid');
+  {Grid} = require('../Grid');
 
 
 describe('Game', function() {
+  let game, gameState;
+  let values_mtx, states_mtx;
+  let values, states;
+
   describe('is constructed with a GameState object', function() {
-    xit('should have a width', function() {
-
+    beforeEach(function() {
+      values_mtx = [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+      ];
+      states_mtx = [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+      ];
+      values = new Grid(values_mtx);
+      states = new Grid(states_mtx);
+      gameState = {values, states};
+      game = new Game(gameState);
     });
-    xit('should have a height', function() {
-
+    it('should have a width', function() {
+      expect(game.width).toEqual(values_mtx[0].length);
     });
-    describe('has a grid with display information for each cell', function() {
-      xit('should be initialized `Covered` for each cell', function() {
-
+    it('should have a height', function() {
+      expect(game.height).toEqual(values_mtx.length);
+    });
+    it('should have a display grid', function () {
+      expect(game.displayGrid instanceof Grid).toBe(true);
+    });
+    it('should have a display grid with each cell initialized `Covered`', function() {
+      game.displayGrid.forEach((cell, x, y) => {
+        expect(cell).toEqual(CellDisplay.Covered);
       });
     });
   });
