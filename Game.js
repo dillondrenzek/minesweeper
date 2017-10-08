@@ -90,6 +90,20 @@ class Game {
   constructor({values, states}) {
     this._values = values;
     this._states = states;
+    this._flags = this._getFlags();
+    this._numMines = this._values.countValue(MINE);
+  }
+
+  _getFlags() {
+    let flags = [];
+    this._states.forEach((state, x, y) => {
+      if (state === CellState.Flagged) flags.push(new Coords(x, y));
+    });
+    return flags;
+  }
+
+  _gameOver() {
+    // console.error('GAME OVER');
   }
 
   get width() {
@@ -103,15 +117,58 @@ class Game {
       (val, state) => getCellDisplay(val, state));
   }
   get remainingFlags() {
-    return null;
+    return this._numMines - this._flags.length;
   }
 
+  // @param { number } x
+  // @param { number } y
   uncover(x, y) {
-
+    console.log(this._states, this._values);
+    let state = this._states.get(x,y);
+    let val = this._values.get(x,y);
+    if (state === CellState.Covered) {
+      // set state to uncovered
+      this._states.set(x,y, CellState.Uncovered);
+      // if value is a mine
+      if (val === MINE) {
+        this._states.set(x,y,CellState.Triggered);
+        this._gameOver();
+        return;
+      }
+      if (val === 0) {
+        // uncover neighbors
+        this._uncoverNeighbors(x, y);
+      }
+    }
   }
 
-  flag(x, y) {
+  _uncoverNeighbors(x, y) {
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        let x2 = x + dx;
+        let y2 = y + dy;
 
+        let inBounds =  (x2 < 0 || y2 < 0)
+                    || (x2 >= this.width || y2 >= this.height);
+
+        if (inBounds) {
+          this.uncover(x2, y2);
+        }
+      }
+    }
+  }
+
+  // @param { number } x
+  // @param { number } y
+  flag(x, y) {
+    let curr = this._states.get(x,y);
+    if (curr === CellState.Covered) {
+      this._states.set(x,y, CellState.Flagged);
+      this._flags = [new Coords(x,y), ...this._flags];
+    } else if (curr === CellState.Flagged) {
+      this._states.set(x,y, CellState.Covered);
+      this._flags = this._flags.filter((c) => !(c.x === x && c.y === y));
+    }
   }
 
 
@@ -123,6 +180,7 @@ class Game {
   // @param { number } width
   // @param { number } height
   // @param { number } num_mines
+  // @return { Game }
   static generate(width, height, num_mines) {
     // Coords[]
     const mines = Coords.generateMany(width, height, num_mines);
@@ -136,7 +194,7 @@ class Game {
   }
   // static validGameState({values, states}) {}
 
-  toString() {}
+  toString() { return this.displayGrid.toString(); }
 }
 
 module.exports = {Game, CellDisplay, CellState, MINE, calculateCellValues};

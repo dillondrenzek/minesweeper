@@ -48,10 +48,18 @@ class Grid {
     return this._matrix.length;
   }
 
+  get count() {
+    return width * height;
+  }
+
   // UNTESTED
   // @return { number }
-  get count() {
-    return
+  countValue(val) {
+    let count = 0;
+    this.forEach((el) => {
+      if (el === val) count++;
+    });
+    return count;
   }
 
   // @param { number } x
