@@ -21,7 +21,11 @@ console.log('Starting Minesweeper');
 // ];
 // let grid = new Grid(height, width, mines);
 
-let game = Game.generate(3, 3, 3);
+let game = Game.generate(10, 10, 10);
 
 // console.log(game.toString());
+console.log(game.displayGrid.toString());
+
+game.uncover(0,0);
+
 console.log(game.displayGrid.toString());

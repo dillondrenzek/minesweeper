@@ -74,6 +74,35 @@ describe('Game', function() {
     });
   });
 
+  xdescribe('allows user to flag cells', function() {
+    xit('should keep a count of remaining flags', function() {
+
+    });
+    describe('when a cell is not yet flagged', function() {
+      xit('should set cell state to Flagged', function() {
+
+      });
+      xit('should decrement count of remaining flags', function() {
+
+      });
+    });
+    describe('when a cell is already flagged', function() {
+      xit('should set cell state to Covered', function() {
+
+      });
+      xit('should increment count of remaining flags', function() {
+
+      });
+    });
+    describe('when a cell is uncovered', function() {
+      xit('should not update display grid', function() {
+
+      });
+      xit('should not change count of remaining flags', function() {
+
+      });
+    });
+  });
 
 });
 
