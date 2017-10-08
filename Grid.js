@@ -25,48 +25,6 @@ const seedMatrix = (size, val) => {
   return st;
 }
 
-// Calculates a value for each cell equal to the number
-// of mines are immediately adjacent to each cell
-// @param {width, height} size - size of the cell matrix
-// @param {Coords[]} mines - an array of coordinate locaitons
-//                           for each mine
-
-const calculateCellValues = (size, mines) => {
-  let values = seedMatrix(size, 0);
-
-  // determines if cell at (x,y) should be marked as a mine
-  const shouldBeMine = (x, y) => {
-    return mines.find((e) => (e.x === x && e.y === y));
-  };
-
-  // for each mine, increment its adjacent non-mine cells
-  for (let mine of mines) {
-
-    // increment each cell around the mine
-    for(let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        let i2 = mine.y + i;
-        let j2 = mine.x + j;
-
-        if (!(i === 0 && j === 0)) {
-          // skip any coordinates
-          //  - that have negative coords
-          //  - that have out of bounds coords
-          if ((i2 < 0 || j2 < 0) ||
-            (i2 >= values.length || j2 >= values[i2].length))
-            continue;
-          // increment if not a mine
-          if (!shouldBeMine(j2, i2)) values[i2][j2] += 1;
-        } else {
-          // mark as mine
-          values[mine.y][mine.x] = MINE;
-        }
-      }
-    }
-  }
-
-  return values;
-};
 
 
 //
@@ -74,6 +32,9 @@ class Grid {
 
   // @param { T[][] } matrix
   constructor(matrix) {
+    if (!matrix) throw new Error('Cannot construct Grid with undefined constructor property.');
+    if (!matrix.length) throw new Error('Cannot construct Grid with no rows');
+    if (!Array.isArray(matrix[0])) throw new Error('Cannot construct Grid without two-dimensional array');
     this._matrix = matrix;
   }
 
@@ -85,6 +46,12 @@ class Grid {
   // @return { number }
   get height() {
     return this._matrix.length;
+  }
+
+  // UNTESTED
+  // @return { number }
+  get count() {
+    return
   }
 
   // @param { number } x
@@ -105,6 +72,8 @@ class Grid {
   // @param { string } itemSeparator
   // @return {string} - representation of the grid
   toString(rowSeparator, itemSeparator) {
+    if (rowSeparator === undefined) rowSeparator = '\n';
+    if (itemSeparator === undefined) itemSeparator = ' ';
     return this._matrix
       .map((row) => row.join(itemSeparator))
       .join(rowSeparator);
@@ -113,6 +82,7 @@ class Grid {
 
 
   // [UNTESTED]
+  // @param { (el, x, y) => void } el - element at position (x, y)
   forEach(fn) {
     for(let i = 0; i < this.height; i++) {
       for(let j = 0; j < this.width; j++) {
@@ -124,14 +94,29 @@ class Grid {
 
   // STATIC METHODS
 
-  // @return {Grid}
+  // [UNTESTED]
+  // @param { number } width
+  // @param { number } height
+  // @param { T } val
+  // @return { Grid<T> }
+  static generate(width, height, val) {
+    let matrix = seedMatrix({width, height}, val);
+    return new Grid(matrix);
+  }
 
-  // static generate(width, height, numMines) {
-  //   // Coords[]
-  //   const mines = Coords.generateMany(width, height, numMines);
-  //   return new Grid(width, height, mines)
-  // }
+  // [UNTESTED]
+  // @param { Grid<T> } a
+  // @param { Grid<T> } b
+  // @param { (T, T) => T }
+  static reduce(a, b, fn) {
+    let n = Grid.generate(a.width, a.height, null);
+    a.forEach((a_el, x, y) => {
+      let b_el = b.get(x, y);
+      n.set(x, y, fn(a_el, b_el));
+    });
+    return n;
+  }
 
 }
 
-module.exports = {Grid, CellState, MINE, calculateCellValues, seedMatrix};
+module.exports = {Grid, CellState, MINE, seedMatrix};

@@ -1,4 +1,5 @@
-const {Game, CellDisplay} = require('../Game'),
+const {Game, CellDisplay, CellState, MINE, calculateCellValues} = require('../Game'),
+  {Coords} = require('../Coords'),
   {Grid} = require('../Grid');
 
 
@@ -14,10 +15,11 @@ describe('Game', function() {
         [0,0,0],
         [0,0,0]
       ];
+      let C = CellState.Covered;
       states_mtx = [
-        [0,0,0],
-        [0,0,0],
-        [0,0,0]
+        [C,C,C],
+        [C,C,C],
+        [C,C,C]
       ];
       values = new Grid(values_mtx);
       states = new Grid(states_mtx);
@@ -71,6 +73,59 @@ describe('Game', function() {
       });
     });
   });
+
+
+});
+
+
+describe('calculateCellValues()', () => {
+
+  let values;
+  let grid;
+
+  describe('should not throw when updating edge cells', () => {
+    let size = {width: 3, height: 3};
+
+    it('x less than 0', () => {
+      expect(() => calculateCellValues(size, [new Coords(0,1)])).not.toThrow();
+    });
+    it('x greather than width of grid', () => {
+      expect(() => calculateCellValues(size, [new Coords(size.width-1, 1)])).not.toThrow();
+    });
+    it('y less than 0', () => {
+      expect(() => calculateCellValues(size, [new Coords(1,0)])).not.toThrow();
+    });
+    it('y greather than height of grid', () => {
+      expect(() => calculateCellValues(size, [new Coords(1, size.height-1)])).not.toThrow();
+    });
+  });
+
+
+
+  describe('should increment the cells adjacent to mine', () => {
+    let size = {width: 3, height: 3};
+    let expected, result;
+
+    beforeEach(() => {
+      expected = [
+        [MINE, 2, 0],
+        [MINE, 3, 1],
+        [1, 2, MINE]
+      ];
+      result = calculateCellValues(size, [
+        new Coords(0,0), new Coords(0,1), new Coords(2,2)]);
+    });
+
+    it('by 1', () => {
+      for (let i = 0; i < expected.length; i++) {
+        let row = expected[i];
+        for (let j = 0; i < row.length; i++) {
+          expect(result[i][j]).toEqual(expected[i][j]);
+        }
+      }
+    });
+  });
+
 });
 
 

@@ -1,4 +1,4 @@
-// const Game = require('./Game');
+const { Game } = require('./Game');
 //
 // let game = new Game();
 const { Coords } = require('./Coords');
@@ -12,13 +12,16 @@ console.log('Starting Minesweeper');
 // M 3 1
 // 1 2 M
 
-let height = 3;
-let width = 3;
-let mines = [
-  new Coords(0,0),
-  new Coords(0,1),
-  new Coords(2,2)
-];
-let grid = new Grid(height, width, mines);
+// let height = 3;
+// let width = 3;
+// let mines = [
+//   new Coords(0,0),
+//   new Coords(0,1),
+//   new Coords(2,2)
+// ];
+// let grid = new Grid(height, width, mines);
 
-console.log(grid.toString());
+let game = Game.generate(3, 3, 3);
+
+// console.log(game.toString());
+console.log(game.displayGrid.toString());

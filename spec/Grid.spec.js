@@ -1,4 +1,4 @@
-const {Grid, CellState, MINE, calculateCellValues, seedMatrix} = require('../Grid');
+const {Grid, CellState, MINE, seedMatrix} = require('../Grid');
 const {Coords} = require('../Coords');
 
 
@@ -6,7 +6,7 @@ describe('Grid', function() {
   let grid, matrix;
 
   beforeEach(function() {
-    matrix = [[0,0],[0,0]];
+    matrix = [[0,0],[0,0], [0,0]];
     grid = new Grid(matrix);
   });
 
@@ -79,6 +79,30 @@ describe('Grid', function() {
 
   describe('can be output as a string', function() {
 
+    describe('when not provided an item separator or row separator', function() {
+      let rowSeparator = '\n';
+      let itemSeparator = ' ';
+      let result, result_values;
+
+      beforeEach(function() {
+        result = grid.toString();
+        result_values = result
+          .split(rowSeparator)
+          .map((row_str) => row_str.split(itemSeparator));
+      });
+
+      it('should separate the rows with a new-line character', function() {
+        let rows = result_values;
+        expect(rows.length).toEqual(grid.height);
+      });
+      it('should separate the items with a space', function() {
+        // for each row of output string
+        result_values.forEach((row) => {
+          // expect the number of items separated by the `itemSeparator` to equal the width of the grid
+          expect(row.length).toEqual(grid.width);
+        });
+      });
+    });
 
     describe('when provided an item separator and row separator', function() {
       let rowSeparator = '\n';
@@ -197,56 +221,4 @@ xdescribe('Grid', () => {
   describe('toString()', () => {
 
   });
-});
-
-
-
-describe('calculateCellValues()', () => {
-
-  let values;
-  let grid;
-
-  describe('should not throw when updating edge cells', () => {
-    let size = {width: 3, height: 3};
-
-    it('x less than 0', () => {
-      expect(() => calculateCellValues(size, [new Coords(0,1)])).not.toThrow();
-    });
-    it('x greather than width of grid', () => {
-      expect(() => calculateCellValues(size, [new Coords(size.width-1, 1)])).not.toThrow();
-    });
-    it('y less than 0', () => {
-      expect(() => calculateCellValues(size, [new Coords(1,0)])).not.toThrow();
-    });
-    it('y greather than height of grid', () => {
-      expect(() => calculateCellValues(size, [new Coords(1, size.height-1)])).not.toThrow();
-    });
-  });
-
-
-
-  describe('should increment the cells adjacent to mine', () => {
-    let size = {width: 3, height: 3};
-    let expected, result;
-
-    beforeEach(() => {
-      expected = [
-        [MINE, 2, 0],
-        [MINE, 3, 1],
-        [1, 2, MINE]
-      ];
-      result = calculateCellValues(size, [
-        new Coords(0,0), new Coords(0,1), new Coords(2,2)]);
-    });
-
-    it('by 1', () => {
-      for (let i = 0; i < expected.length; i++) {
-        let row = expected[i];
-        for (let j = 0; i < row.length; i++) {
-          expect(result[i][j]).toEqual(expected[i][j]);
-        }
-      }
-    });
-  });
-
 });
