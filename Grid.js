@@ -117,6 +117,21 @@ class Grid {
     return n;
   }
 
+  // [UNTESTED]
+  // @param { Grid<T> } a
+  // @param { Grid<T> } b
+  // @return { boolean }
+  static equal(a, b) {
+    for(let i = 0; i < a.height; i++) {
+      for(let j = 0; j < a.width; j++) {
+        let a_el = a.get(j, i);
+        let b_el = b.get(j, i);
+        if (a_el !== b_el) return false;
+      }
+    }
+    return true;
+  }
+
 }
 
 module.exports = {Grid, CellState, MINE, seedMatrix};

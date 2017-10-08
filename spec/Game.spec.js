@@ -1,6 +1,6 @@
 const {Game, CellDisplay, CellState, MINE, calculateCellValues} = require('../Game'),
   {Coords} = require('../Coords'),
-  {Grid} = require('../Grid');
+  {Grid, seedMatrix} = require('../Grid');
 
 
 describe('Game', function() {
@@ -16,11 +16,7 @@ describe('Game', function() {
         [0,0,0]
       ];
       let C = CellState.Covered;
-      states_mtx = [
-        [C,C,C],
-        [C,C,C],
-        [C,C,C]
-      ];
+      states_mtx = seedMatrix({width: values_mtx[0].length, height: values_mtx.length}, CellState.Covered);
       values = new Grid(values_mtx);
       states = new Grid(states_mtx);
       gameState = {values, states};
@@ -42,64 +38,132 @@ describe('Game', function() {
     });
   });
   describe('allows user to uncover cells', function() {
+    beforeEach(function() {
+      values_mtx = [
+        [0, 0, 1, MINE],
+        [1, 1, 2, 1],
+        [1, MINE, 1, 0],
+        [1, 1, 1, 0]
+      ];
+      values = new Grid(values_mtx);
+      states_mtx = seedMatrix({width: values.width, height: values.height}, CellState.Covered);
+      states = new Grid(states_mtx);
+      game = new Game({values, states});
+    });
+
     describe('when the cell is already uncovered', function() {
       xit('should not update display grid', function() {
 
       });
     });
     describe('when not uncovering mine', function() {
-      xit('should uncover appropriate cells', function() {
-
+      let expected_display;
+      beforeEach(function() {
+        let C = CellDisplay.Covered;
+        let U = CellDisplay.Uncovered;
+        // uncover a non-mine cell
+        game.uncover(0,1);
+        // expect display grid to look like:
+        expected_display = new Grid([
+          [U, U, 1, C],
+          [1, 1, 2, C],
+          [C, C, C, C],
+          [C, C, C, C]
+        ]);
       });
-      xit('should update display grid', function() {
 
+      it('should uncover appropriate cells', function() {
+        expect(Grid.equal(game.displayGrid, expected_display)).toBe(true);
       });
     });
     describe('when uncovering mine', function() {
-      xit('should set all states to Uncovered', function() {
-
+      let expected_display;
+      beforeEach(function() {
+        let C = CellDisplay.Covered;
+        let U = CellDisplay.Uncovered;
+        let T = CellDisplay.Triggered;
+        let M = CellDisplay.Mine;
+        // uncover a non-mine cell
+        game.uncover(3,0);
+        // expect display grid to look like:
+        expected_display = new Grid([
+          [C, C, C, T],
+          [C, C, C, C],
+          [C, M, C, C],
+          [C, C, C, C]
+        ]);
       });
-      xit('should set triggered mine to Triggered state', function() {
-
-      });
-      xit('should keep all flags as Flagged', function() {
-
-      });
-      xit('should update display grid', function() {
-
-      });
-      xit('should throw error', function() {
-
+      it('should uncover appropriate cells', function() {
+        expect(Grid.equal(game.displayGrid, expected_display)).toBe(true);
       });
     });
   });
 
-  xdescribe('allows user to flag cells', function() {
+
+
+
+
+  describe('allows user to flag cells', function() {
+
+    let beforeFlagCount;
+
+    beforeEach(function() {
+      values_mtx = [
+        [1, 1],
+        [1, MINE]
+      ];
+      values = new Grid(values_mtx);
+      states_mtx = seedMatrix({width: values.width, height: values.height}, CellState.Covered);
+      states = new Grid(states_mtx);
+      game = new Game({values, states});
+    });
     xit('should keep a count of remaining flags', function() {
 
     });
     describe('when a cell is not yet flagged', function() {
-      xit('should set cell state to Flagged', function() {
 
+      beforeEach(function() {
+        beforeFlagCount = game.remainingFlags;
+        // flag a covered cell
+        game.flag(0,0);
       });
-      xit('should decrement count of remaining flags', function() {
-
+      it('should set cell state to Flagged', function() {
+        expect(game.displayGrid.get(0,0)).toEqual(CellDisplay.Flagged);
+      });
+      it('should decrement count of remaining flags', function() {
+        expect(game.remainingFlags).toEqual(beforeFlagCount - 1);
       });
     });
     describe('when a cell is already flagged', function() {
-      xit('should set cell state to Covered', function() {
-
+      beforeEach(function() {
+        // flag a covered cell
+        game.flag(0,0);
+        beforeFlagCount = game.remainingFlags;
+        // re-flag that same cell
+        game.flag(0,0);
       });
-      xit('should increment count of remaining flags', function() {
-
+      it('should set cell state to Covered', function() {
+        expect(game.displayGrid.get(0,0)).toEqual(CellDisplay.Covered);
+      });
+      it('should increment count of remaining flags', function() {
+        expect(game.remainingFlags).toEqual(beforeFlagCount + 1);
       });
     });
     describe('when a cell is uncovered', function() {
-      xit('should not update display grid', function() {
-
+      let beforeDisplay;
+      beforeEach(function() {
+        // flag a covered cell
+        game.uncover(0,0);
+        beforeDisplay = game.displayGrid.get(0,0);
+        beforeFlagCount = game.remainingFlags;
+        // re-flag that same cell
+        game.flag(0,0);
       });
-      xit('should not change count of remaining flags', function() {
-
+      it('should not update display grid', function() {
+        expect(game.displayGrid.get(0,0)).toEqual(beforeDisplay);
+      });
+      it('should not change count of remaining flags', function() {
+        expect(game.remainingFlags).toEqual(beforeFlagCount);
       });
     });
   });

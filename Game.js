@@ -102,6 +102,23 @@ class Game {
     return Grid.reduce(this._values, this._states,
       (val, state) => getCellDisplay(val, state));
   }
+  get remainingFlags() {
+    return null;
+  }
+
+  uncover(x, y) {
+
+  }
+
+  flag(x, y) {
+
+  }
+
+
+
+
+
+
 
   // @param { number } width
   // @param { number } height
