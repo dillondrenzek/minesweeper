@@ -72,81 +72,87 @@ const calculateCellValues = (size, mines) => {
 //
 class Grid {
 
-  // @param {number} width
-  // @param {number} height
-  // @param {Coords[]} mines
-  constructor(width, height, mines) {
-    // create size object
-    this.size = {width, height};
-
-    // set mines array
-    this.mines = mines;
-
-    // set states to all grid 'covered'
-    this._states = seedMatrix(this.size, CellState.Covered);
-
-    // calculate cell values
-    this._values = calculateCellValues(this.size, this.mines)
+  // @param { T[][] } matrix
+  constructor(matrix) {
+    this._matrix = matrix;
   }
 
-  get values() {
-    return this._values;
+  // @return { number }
+  get width() {
+    return this._matrix[0].length;
   }
 
-  get states() {
-    return this._states;
+  // @return { number }
+  get height() {
+    return this._matrix.length;
   }
 
+  // @param { number } x
+  // @param { number } y
+  // @return { T }
+  get(x, y) {
+    return this._matrix[y][x];
+  }
+
+  // @param { number } x
+  // @param { number } y
+  // @param { T } val
+  set(x, y, val) {
+    this._matrix[y][x] = val;
+  }
+
+  // @param { string } rowSeparator
+  // @param { string } itemSeparator
   // @return {string} - representation of the grid
-  toString() {
-    let itemSeparator = ' ',
-        rowSeparator = '\n';
-    return this.values
+  toString(rowSeparator, itemSeparator) {
+    return this._matrix
       .map((row) => row.join(itemSeparator))
       .join(rowSeparator);
   }
 
-  // @return {number | 'M'}
-  getCellValue(coords) {
-    return this.values[coords.y][coords.x];
-  }
 
-  // @return {CellState:number}
-  getCellState(coords) {
-    return this.states[coords.y][coords.x];
-  }
-
-  // @return {void}
-  setCellState(coords, state) {
-    this._states[coords.y][coords.x] = state;
-  }
-
-  // @return {boolean}
-  isCellFlagged(coords) {
-    return this.getCellState(coords) === CellState.Flagged;
-  }
-
-  // @return {boolean}
-  isCellCovered(coords) {
-    let st = this.getCellState(coords);
-    return st === CellState.Covered
-        || st === CellState.Flagged;
-  }
-
-  // @return {boolean}
-  isCellMine(coords) {
-    return this.getCellValue(coords) === MINE;
-  }
-
-
-  // STATIC METHODS
-
-  // @return {Grid}
-  static generate(width, height, numMines) {
-    // Coords[]
-    const mines = Coords.generateMany(width, height, numMines);
-    return new Grid(width, height, mines)
-  }
+  //
+  // // @return {number | 'M'}
+  // getCellValue(coords) {
+  //   return this.values[coords.y][coords.x];
+  // }
+  //
+  // // @return {CellState:number}
+  // getCellState(coords) {
+  //   return this.states[coords.y][coords.x];
+  // }
+  //
+  // // @return {void}
+  // setCellState(coords, state) {
+  //   this._states[coords.y][coords.x] = state;
+  // }
+  //
+  // // @return {boolean}
+  // isCellFlagged(coords) {
+  //   return this.getCellState(coords) === CellState.Flagged;
+  // }
+  //
+  // // @return {boolean}
+  // isCellCovered(coords) {
+  //   let st = this.getCellState(coords);
+  //   return st === CellState.Covered
+  //       || st === CellState.Flagged;
+  // }
+  //
+  // // @return {boolean}
+  // isCellMine(coords) {
+  //   return this.getCellValue(coords) === MINE;
+  // }
+  //
+  //
+  // // STATIC METHODS
+  //
+  // // @return {Grid}
+  // static generate(width, height, numMines) {
+  //   // Coords[]
+  //   const mines = Coords.generateMany(width, height, numMines);
+  //   return new Grid(width, height, mines)
+  // }
 
 }
 

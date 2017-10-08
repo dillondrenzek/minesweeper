@@ -86,7 +86,7 @@ be able to run on its own (unit tests)
     - should set triggered mine to `Triggered` state
     - should keep all flags as `Flagged`
     - should update display grid
-    - should throw error(?) on mine `throw new MineError()`
+    - should throw error(?) on mine
 
 1. allows user to flag cells
   - should keep a count of remaining flags
@@ -114,17 +114,22 @@ be able to run on its own (unit tests)
 
 #### Requirements
 
-1. is constructed with a two-dimensional array
-  - should have a width
-  - should have a height
+1. is constructed with a two-dimensional array of rows
+  - should all be the same length
+  - should have a width equal to the length of a row
+  - should have a height equal to the length of the array of rows
 
-1. can get a value
-  1. given an x and y coordinate
+1. can get the value of a cell
+  1. given an (x, y) within the bounds of the grid
     - should return the correct value
+  1. given an (x, y) outside the bounds of the grid
+    - should throw an error
 
-1. can set a value
-  1. given an x and y coordinate and a value
-    - should set the correct value
+1. can set the value of a cell
+  1. given an (x, y) within the bounds of the grid
+    - should set the value of the cell at (x, y) to the given value
+  1. given an (x, y) outside the bounds of the grid
+    - should throw an error
 
 1. can be output as a string
   1. when provided an item separator and row separator
@@ -165,10 +170,10 @@ CellValue:
 - 'M' | [0-8]
 
 CellState:
-- Covered
-- Uncovered
-- Flagged
-- Triggered
+- `Covered`
+- `Uncovered`
+- `Flagged`
+- `Triggered`
 
 CellDisplay:
 - (CellValue | CellState) = (state === Uncovered) ? value : state;

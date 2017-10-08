@@ -2,7 +2,53 @@ const {Game, CellDisplay} = require('../Game'),
   Grid = require('../Grid');
 
 
+describe('Game', function() {
+  describe('is constructed with a GameState object', function() {
+    xit('should have a width', function() {
 
+    });
+    xit('should have a height', function() {
+
+    });
+    describe('has a grid with display information for each cell', function() {
+      xit('should be initialized `Covered` for each cell', function() {
+
+      });
+    });
+  });
+  describe('allows user to uncover cells', function() {
+    describe('when the cell is already uncovered', function() {
+      xit('should not update display grid', function() {
+
+      });
+    });
+    describe('when not uncovering mine', function() {
+      xit('should uncover appropriate cells', function() {
+
+      });
+      xit('should update display grid', function() {
+
+      });
+    });
+    describe('when uncovering mine', function() {
+      xit('should set all states to Uncovered', function() {
+
+      });
+      xit('should set triggered mine to Triggered state', function() {
+
+      });
+      xit('should keep all flags as Flagged', function() {
+
+      });
+      xit('should update display grid', function() {
+
+      });
+      xit('should throw error', function() {
+
+      });
+    });
+  });
+});
 
 
 
