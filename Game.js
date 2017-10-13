@@ -3,42 +3,19 @@ const {Coords} = require('./Coords');
 
 const MINE = 'M';
 
-const CellDisplay = {
-  Covered: 'O',
-  Flagged: 'F',
-  Uncovered: '-',
-  Mine: 'M',
-  Triggered: 'X',
-  value: (x) => x.toString()
-}
-
 const CellState = {
-  Covered: 'O',
-  Uncovered: '-',
+  Covered: 'C',
+  Uncovered: 'U',
   Flagged: 'F',
   Triggered: 'X'
 }
 
-// @return { CellDisplay }
-const getCellDisplay = (val, state) => {
-  if (state === CellState.Uncovered) {
-    if (val === MINE)
-      return CellDisplay.Mine;
-    if (val === 0)
-      return CellDisplay.Uncovered;
-    else
-      return CellDisplay.value(val);
-  } else {
-    if (state === CellState.Flagged)
-      return CellDisplay.Flagged;
-    if (state === CellState.Covered)
-      return CellDisplay.Covered;
-    if (state === CellState.Triggered)
-      return CellDisplay.Triggered;
-    else
-      return CellDisplay.value(val);
-  }
-}
+
+// Either cell value as a string, or the cell state
+const CellDisplay = function(val, state) {
+  return (state === CellState.Uncovered) ? val.toString() : state;
+};
+
 
 // Calculates a value for each cell equal to the number
 // of mines are immediately adjacent to each cell
@@ -114,7 +91,7 @@ class Game {
   }
   get displayGrid() {
     return Grid.reduce(this._values, this._states,
-      (val, state) => getCellDisplay(val, state));
+      (val, state) => CellDisplay(val, state));
   }
   get remainingFlags() {
     return this._numMines - this._flags.length;
@@ -123,35 +100,40 @@ class Game {
   // @param { number } x
   // @param { number } y
   uncover(x, y) {
-    console.log(this._states, this._values);
+    // console.log('before uncover (',x, y,'):');
+    // console.log(this._states.toString() + '\n' + this._values.toString() + '\n');
     let state = this._states.get(x,y);
     let val = this._values.get(x,y);
     if (state === CellState.Covered) {
+
       // set state to uncovered
       this._states.set(x,y, CellState.Uncovered);
-      // if value is a mine
+
+
+      // mine
       if (val === MINE) {
         this._states.set(x,y,CellState.Triggered);
         this._gameOver();
         return;
       }
+      // continue uncovering neighbors
       if (val === 0) {
         // uncover neighbors
-        this._uncoverNeighbors(x, y);
+        this._uncoverAdjacentCells(x, y);
       }
     }
   }
 
-  _uncoverNeighbors(x, y) {
+  _uncoverAdjacentCells(x, y) {
     for (let dx = -1; dx <= 1; dx++) {
       for (let dy = -1; dy <= 1; dy++) {
         let x2 = x + dx;
         let y2 = y + dy;
 
-        let inBounds =  (x2 < 0 || y2 < 0)
-                    || (x2 >= this.width || y2 >= this.height);
-
-        if (inBounds) {
+        let inBounds =  (x2 >= 0 && y2 >=  0)
+                    && (x2 < this.width && y2 < this.height);
+        let notCenter = !(dx === 0 && dy === 0);
+        if (inBounds && notCenter) {
           this.uncover(x2, y2);
         }
       }

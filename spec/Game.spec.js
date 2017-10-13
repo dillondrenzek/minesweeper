@@ -2,6 +2,7 @@ const {Game, CellDisplay, CellState, MINE, calculateCellValues} = require('../Ga
   {Coords} = require('../Coords'),
   {Grid, seedMatrix} = require('../Grid');
 
+const {expectGridsEqual} = require('./helpers/Grid-helpers');
 
 describe('Game', function() {
   let game, gameState;
@@ -44,13 +45,13 @@ describe('Game', function() {
     it('should have a display grid with each cell initialized `Covered`', function() {
       pending('This test should be moved to Game.generate()');
       game.displayGrid.forEach((cell, x, y) => {
-        expect(cell).toEqual(CellDisplay.Covered);
+        expect(cell).toEqual(CellState.Covered);
       });
     });
   });
 
   describe('allows user to uncover cells', function() {
-    
+
     beforeEach(function() {
       values_mtx = [
         [0, 0, 1, MINE],
@@ -74,34 +75,33 @@ describe('Game', function() {
     describe('when not uncovering mine', function() {
       let expected_display;
       beforeEach(function() {
-        let C = CellDisplay.Covered;
-        let U = CellDisplay.Uncovered;
+        let C = CellState.Covered;
         // uncover a non-mine cell
         game.uncover(1,0);
         // expect display grid to look like:
         expected_display = new Grid([
-          [U, U, 1, C],
-          [1, 1, 2, C],
+          ['0', '0', '1', C],
+          ['1', '1', '2', C],
           [C, C, C, C],
           [C, C, C, C]
         ]);
       });
 
       it('should uncover appropriate cells', function() {
-        expect(Grid.equal(game.displayGrid, expected_display)).toBe(true);
+        expectGridsEqual(game.displayGrid, expected_display);
       });
     });
     describe('when uncovering mine', function() {
-      let expected_display;
+      let expected;
       beforeEach(function() {
-        let C = CellDisplay.Covered;
-        let U = CellDisplay.Uncovered;
-        let T = CellDisplay.Triggered;
-        let M = CellDisplay.Mine;
-        // uncover a non-mine cell
+        spyOn(game, '_gameOver');
+        let C = CellState.Covered;
+        let T = CellState.Triggered;
+        let M = MINE;
+        // uncover a mine
         game.uncover(3,0);
         // expect display grid to look like:
-        expected_display = new Grid([
+        expected = new Grid([
           [C, C, C, T],
           [C, C, C, C],
           [C, M, C, C],
@@ -109,7 +109,10 @@ describe('Game', function() {
         ]);
       });
       it('should uncover appropriate cells', function() {
-        expect(Grid.equal(game.displayGrid, expected_display)).toBe(true);
+        expectGridsEqual(game.displayGrid, expected);
+      });
+      it('should end the game', function() {
+        expect(game._gameOver).toHaveBeenCalled();
       });
     });
   });
@@ -143,7 +146,7 @@ describe('Game', function() {
         game.flag(0,0);
       });
       it('should set cell state to Flagged', function() {
-        expect(game.displayGrid.get(0,0)).toEqual(CellDisplay.Flagged);
+        expect(game.displayGrid.get(0,0)).toEqual(CellState.Flagged);
       });
       it('should decrement count of remaining flags', function() {
         expect(game.remainingFlags).toEqual(beforeFlagCount - 1);
@@ -158,7 +161,7 @@ describe('Game', function() {
         game.flag(0,0);
       });
       it('should set cell state to Covered', function() {
-        expect(game.displayGrid.get(0,0)).toEqual(CellDisplay.Covered);
+        expect(game.displayGrid.get(0,0)).toEqual(CellState.Covered);
       });
       it('should increment count of remaining flags', function() {
         expect(game.remainingFlags).toEqual(beforeFlagCount + 1);
