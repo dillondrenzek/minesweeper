@@ -68,33 +68,31 @@ class Game {
     this._values = values;
     this._states = states;
     this._flags = this._getFlags();
+    this._mines = this._getMines();
     this._numMines = this._values.countValue(MINE);
-  }
-
-  _getFlags() {
-    let flags = [];
-    this._states.forEach((state, x, y) => {
-      if (state === CellState.Flagged) flags.push(new Coords(x, y));
-    });
-    return flags;
-  }
-
-  _gameOver() {
-    // console.error('GAME OVER');
   }
 
   get width() {
     return this._values.width;
   }
+
   get height() {
     return this._values.height;
   }
+
   get displayGrid() {
     return Grid.reduce(this._values, this._states,
       (val, state) => CellDisplay(val, state));
   }
+
   get remainingFlags() {
     return this._numMines - this._flags.length;
+  }
+
+  getCellDisplay(x, y) {
+    const val = this._values.get(x,y),
+      state = this._states.get(x,y);
+    return CellDisplay(val, state);
   }
 
   // @param { number } x
@@ -124,6 +122,68 @@ class Game {
     }
   }
 
+  // @param { number } x
+  // @param { number } y
+  flag(x, y) {
+    let curr = this._states.get(x,y);
+    if (curr === CellState.Covered) {
+      this._states.set(x,y, CellState.Flagged);
+      this._flags = [new Coords(x,y), ...this._flags];
+    } else if (curr === CellState.Flagged) {
+      this._states.set(x,y, CellState.Covered);
+      this._flags = this._flags.filter((c) => !(c.x === x && c.y === y));
+    }
+  }
+
+  toString() {
+    return this.displayGrid.toString();
+  }
+
+
+
+  //
+  // Private Methods
+  //
+
+
+  // gets an array of Coords, one for the coords of each Flagged cell
+  _getFlags() {
+    let flags = [];
+    this._states.forEach((state, x, y) => {
+      if (state === CellState.Flagged) flags.push(new Coords(x, y));
+    });
+    return flags;
+  }
+
+  // gets an array of Coords, one for each Mine cell
+  _getMines() {
+    let mines = [];
+    this._values.forEach((val, x, y) => {
+      if (val === MINE) mines.push(new Coords(x, y));
+    });
+    return mines;
+  }
+
+  _gameOver() {
+    this._showRemainingMines();
+  }
+
+  // unless mine is "triggered", change from covered to MINE
+  _showRemainingMines() {
+    console.log('mines', this._mines.toString());
+
+    this._mines.forEach((mine_coord) => {
+      let {x, y} = mine_coord;
+      let state = this._states.get(x, y);
+
+      if (!(state === CellState.Triggered)) {
+        this._states.set(x, y, CellState.Uncovered);
+      }
+    });
+  }
+
+
+
   _uncoverAdjacentCells(x, y) {
     for (let dx = -1; dx <= 1; dx++) {
       for (let dy = -1; dy <= 1; dy++) {
@@ -139,23 +199,6 @@ class Game {
       }
     }
   }
-
-  // @param { number } x
-  // @param { number } y
-  flag(x, y) {
-    let curr = this._states.get(x,y);
-    if (curr === CellState.Covered) {
-      this._states.set(x,y, CellState.Flagged);
-      this._flags = [new Coords(x,y), ...this._flags];
-    } else if (curr === CellState.Flagged) {
-      this._states.set(x,y, CellState.Covered);
-      this._flags = this._flags.filter((c) => !(c.x === x && c.y === y));
-    }
-  }
-
-
-
-
 
 
 
@@ -175,8 +218,6 @@ class Game {
     return new Game({values, states});
   }
   // static validGameState({values, states}) {}
-
-  toString() { return this.displayGrid.toString(); }
 }
 
 module.exports = {Game, CellDisplay, CellState, MINE, calculateCellValues};

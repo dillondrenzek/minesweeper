@@ -4,28 +4,58 @@ const { Game } = require('./Game');
 const { Coords } = require('./Coords');
 const { Grid, consoleOutputGrid } = require('./Grid');
 
+
+class Minesweeper {
+
+  constructor(_process) {
+    if (!_process) throw new Error('Invalid process');
+
+    // init variables
+    this._game = Game.generate(10, 10, 10);
+
+    this.printBoard();
+
+    // bind stdin
+    this._process = _process;
+    this._process.stdin.on('data', this._handleData.bind(this));
+    this._process.stdin.on('end', this._handleEndStream.bind(this));
+  }
+
+  printBoard() {
+    let e = this._game.displayGrid.toString().split('\n');
+    e = [
+      '  0 1 2 3 4 5 6 7 8 9',
+      ...e.map((row, i) => i + ' ' + row)
+    ].join('\n');
+
+    console.log(e);
+  }
+
+  _handleData(data) {
+    // sanitize
+    data = data.toString().replace('\n', '');
+    // parse coords
+    const input_coords = data.split(' ');
+    // play game
+    this._game.uncover(parseInt(input_coords[0]), parseInt(input_coords[1]));
+
+    this.printBoard();
+  }
+
+
+
+
+  _handleEndStream(data) {
+
+  }
+
+}
+
+
+
+
+
 // Start Up
 console.log('Starting Minesweeper');
 
-
-// M 2 0
-// M 3 1
-// 1 2 M
-
-// let height = 3;
-// let width = 3;
-// let mines = [
-//   new Coords(0,0),
-//   new Coords(0,1),
-//   new Coords(2,2)
-// ];
-// let grid = new Grid(height, width, mines);
-
-let game = Game.generate(10, 10, 10);
-
-// console.log(game.toString());
-console.log(game.displayGrid.toString());
-
-game.uncover(0,0);
-
-console.log(game.displayGrid.toString());
+let main = new Minesweeper(process);
