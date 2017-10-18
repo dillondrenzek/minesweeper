@@ -80,11 +80,6 @@ class Game {
     return this._values.height;
   }
 
-  get displayGrid() {
-    return Grid.reduce(this._values, this._states,
-      (val, state) => CellDisplay(val, state));
-  }
-
   get remainingFlags() {
     return this._numMines - this._flags.length;
   }
@@ -95,25 +90,31 @@ class Game {
     return CellDisplay(val, state);
   }
 
+  getCellDisplayGrid() {
+    return Grid.reduce(this._values, this._states,
+      (val, state) => CellDisplay(val, state));
+  }
+
   // @param { number } x
   // @param { number } y
   uncover(x, y) {
-    // console.log('before uncover (',x, y,'):');
-    // console.log(this._states.toString() + '\n' + this._values.toString() + '\n');
     let state = this._states.get(x,y);
     let val = this._values.get(x,y);
+
+    // Test for Mine
+    if (val === MINE) {
+      // Trigger mine
+      this._states.set(x,y,CellState.Triggered);
+      // Begin game over
+      this._gameOver();
+      return;
+    }
+
     if (state === CellState.Covered) {
 
       // set state to uncovered
       this._states.set(x,y, CellState.Uncovered);
 
-
-      // mine
-      if (val === MINE) {
-        this._states.set(x,y,CellState.Triggered);
-        this._gameOver();
-        return;
-      }
       // continue uncovering neighbors
       if (val === 0) {
         // uncover neighbors
@@ -170,7 +171,6 @@ class Game {
 
   // unless mine is "triggered", change from covered to MINE
   _showRemainingMines() {
-    console.log('mines', this._mines.toString());
 
     this._mines.forEach((mine_coord) => {
       let {x, y} = mine_coord;
