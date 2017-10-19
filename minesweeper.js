@@ -22,9 +22,18 @@ class Minesweeper {
   }
 
   printBoard() {
-    let e = this._game.displayGrid.toString().split('\n');
+    let first_row = [];
+
+    for (let i = 0; i < this._game.width; i++) {
+      first_row.push(i.toString());
+    }
+
+    first_row = '  ' + first_row.join(' ');
+
+
+    let e = this._game.getCellDisplayGrid().toString().split('\n');
     e = [
-      '  0 1 2 3 4 5 6 7 8 9',
+      first_row,
       ...e.map((row, i) => i + ' ' + row)
     ].join('\n');
 

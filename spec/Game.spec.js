@@ -202,6 +202,8 @@ describe('Game', function() {
     });
   });
 
+  
+
   // PASSING
   describe('- getCellDisplay() -', function () {
     const C = CellState.Covered,

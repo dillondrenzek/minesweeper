@@ -6,7 +6,7 @@ describe('Grid', function() {
   let grid, matrix;
 
   beforeEach(function() {
-    matrix = [[0,0],[0,0], [0,0]];
+    matrix = [[0,0],[0,0],[0,0]];
     grid = new Grid(matrix);
   });
 
