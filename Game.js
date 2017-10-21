@@ -110,6 +110,7 @@ class Game {
       return;
     }
 
+    // if state is Covered
     if (state === CellState.Covered) {
 
       // set state to uncovered
@@ -120,6 +121,14 @@ class Game {
         // uncover neighbors
         this._uncoverAdjacentCells(x, y);
       }
+
+      // test game over
+      let totalUncoveredCells = this._states.countValue(CellState.Uncovered);
+      let totalCells = this.width * this.height;
+      if (totalUncoveredCells === totalCells - this._numMines) {
+        this._gameOver();
+        return;
+      }
     }
   }
 
@@ -127,12 +136,18 @@ class Game {
   // @param { number } y
   flag(x, y) {
     let curr = this._states.get(x,y);
+    // if current cell is covered
     if (curr === CellState.Covered) {
-      this._states.set(x,y, CellState.Flagged);
-      this._flags = [new Coords(x,y), ...this._flags];
+      // flag cell
+      this._flagCell(x, y, true);
+      // check if game can be ended
+      if (this._checkCorrectFlags()) {
+        this._gameOver();
+        return;
+      }
     } else if (curr === CellState.Flagged) {
-      this._states.set(x,y, CellState.Covered);
-      this._flags = this._flags.filter((c) => !(c.x === x && c.y === y));
+      // unflag cell
+      this._flagCell(x, y, false);
     }
   }
 
@@ -156,6 +171,24 @@ class Game {
     return flags;
   }
 
+  // @param {number} x
+  // @param {number} y
+  // @param {boolean} flag - true if state should be set to Flagged
+  //                       - false if state should be set to Covered (unflagged)
+  _flagCell(x,y,flag) {
+    if (flag) {
+      // set that cell to Flagged
+      this._states.set(x,y, CellState.Flagged);
+      // add flag to array of flags
+      this._flags = [new Coords(x,y), ...this._flags];
+    } else {
+      // set that cell to Covered
+      this._states.set(x,y, CellState.Covered);
+      // remove flag from array of flags
+      this._flags = this._flags.filter((c) => !(c.x === x && c.y === y));
+    }
+  }
+
   // gets an array of Coords, one for each Mine cell
   _getMines() {
     let mines = [];
@@ -171,18 +204,30 @@ class Game {
 
   // unless mine is "triggered", change from covered to MINE
   _showRemainingMines() {
-
     this._mines.forEach((mine_coord) => {
       let {x, y} = mine_coord;
       let state = this._states.get(x, y);
-
       if (!(state === CellState.Triggered)) {
         this._states.set(x, y, CellState.Uncovered);
       }
     });
   }
 
+  // checks to see if all flags have been correctly used
+  // @return {boolean} true if all flags have correctly flagged all mines
+  _checkCorrectFlags() {
+    // make sure all flags are used
+    if (this.remainingFlags > 0) return false;
 
+    for (let i = 0; i < this._mines.length; i++) {
+      let {x, y} = this._mines[i];
+      let state = this._states.get(x,y);
+      if (state !== CellState.Flagged) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   _uncoverAdjacentCells(x, y) {
     for (let dx = -1; dx <= 1; dx++) {

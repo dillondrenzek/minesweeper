@@ -3,6 +3,7 @@ const {Game, CellDisplay, CellState, MINE, calculateCellValues} = require('../Ga
   {Grid, seedMatrix} = require('../Grid');
 
 const {expectGridsEqual} = require('./helpers/Grid-helpers');
+const M = MINE;
 
 describe('Game', function() {
   let game, gameState;
@@ -17,7 +18,6 @@ describe('Game', function() {
         [0,0,0],
         [0,0,0]
       ];
-      let C = CellState.Covered;
       states_mtx = seedMatrix({width: values_mtx[0].length, height: values_mtx.length}, CellState.Covered);
       values = new Grid(values_mtx);
       states = new Grid(states_mtx);
@@ -202,7 +202,7 @@ describe('Game', function() {
     });
   });
 
-  
+
 
   // PASSING
   describe('- getCellDisplay() -', function () {
@@ -260,6 +260,74 @@ describe('Game', function() {
             expect(game.getCellDisplay(5,0)).toEqual(M);
           });
         });
+      });
+    });
+  });
+
+
+  describe('- gameOver()', function() {
+
+    describe('should be called', function() {
+
+      beforeEach(function() {
+        // M 3
+        // M M
+        values_mtx = [
+          [M,3],
+          [M,M]
+        ];
+        // let C = CellState.Covered;
+        states_mtx = seedMatrix({width: values_mtx[0].length, height: values_mtx.length}, CellState.Covered);
+        values = new Grid(values_mtx);
+        states = new Grid(states_mtx);
+        gameState = {values, states};
+        game = new Game(gameState);
+
+
+        spyOn(game, '_gameOver');
+      });
+      it('when a mine is uncovered', function () {
+        // uncover mine
+        game.uncover(0,0);
+        // expect game over to be called
+        expect(game._gameOver).toHaveBeenCalled();
+      });
+      it('when the last non-mine is uncovered', function() {
+        // uncover mine
+        game.uncover(1,0);
+        // expect game over to be called
+        expect(game._gameOver).toHaveBeenCalled();
+      });
+      it('when the last non-mine is uncovered indirectly', function() {
+        // M 3
+        // M M
+        values_mtx = [
+          [M,1,0],
+          [1,1,0],
+          [0,0,0]
+        ];
+        // let C = CellState.Covered;
+        states_mtx = seedMatrix({width: values_mtx[0].length, height: values_mtx.length}, CellState.Covered);
+        values = new Grid(values_mtx);
+        states = new Grid(states_mtx);
+        gameState = {values, states};
+        game = new Game(gameState);
+
+
+        spyOn(game, '_gameOver');
+
+        // uncover cell that will lead to all non-mine cells being uncovered
+        game.uncover(2,2);
+        // expect game over to be called
+        expect(game._gameOver).toHaveBeenCalled();
+      });
+      it('when the last flag is correctly placed', function () {
+        // flag all mines
+        game.flag(0,0);
+        game.flag(0,1);
+        game.flag(1,1);
+        // expect game over to be called
+        expect(game._gameOver).toHaveBeenCalled();
       });
     });
   });
