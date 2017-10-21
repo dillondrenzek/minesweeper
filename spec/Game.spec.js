@@ -31,7 +31,7 @@ describe('Game', function() {
       expect(game.height).toEqual(values_mtx.length);
     });
     it('should have a display grid', function () {
-      expect(game.displayGrid instanceof Grid).toBe(true);
+      expect(game.getCellDisplayGrid() instanceof Grid).toBe(true);
     });
 
     it('should be able to be initialized with flags', function() {
@@ -39,14 +39,6 @@ describe('Game', function() {
     });
     it('should not be able to be initialized with incorrect values', function() {
       pending('Need to implement tests for different constructions of Game');
-    });
-
-    // only when .generate()'d
-    it('should have a display grid with each cell initialized `Covered`', function() {
-      pending('This test should be moved to Game.generate()');
-      game.displayGrid.forEach((cell, x, y) => {
-        expect(cell).toEqual(CellState.Covered);
-      });
     });
   });
 
@@ -264,7 +256,7 @@ describe('Game', function() {
     });
   });
 
-
+  // PASSING
   describe('- gameOver()', function() {
 
     describe('should be called', function() {
@@ -331,6 +323,30 @@ describe('Game', function() {
       });
     });
   });
+
+
+  describe('- generate()', function () {
+    beforeEach(function() {
+      values_mtx = [
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+      ];
+      states_mtx = seedMatrix({width: values_mtx[0].length, height: values_mtx.length}, CellState.Covered);
+      values = new Grid(values_mtx);
+      states = new Grid(states_mtx);
+      gameState = {values, states};
+      game = new Game(gameState);
+    });
+
+    it('should have a display grid with each cell initialized `Covered`', function() {
+      // pending('This test should be moved to Game.generate()');
+      let displayGrid = game.getCellDisplayGrid();
+      displayGrid.forEach((cell, x, y) => {
+        expect(cell).toEqual(CellState.Covered);
+      });
+    });
+  })
 });
 
 

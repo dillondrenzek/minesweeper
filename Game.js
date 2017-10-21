@@ -84,12 +84,18 @@ class Game {
     return this._numMines - this._flags.length;
   }
 
+  // gets the CellDisplay value for a given cell
+  // @param {number} x
+  // @param {number} y
+  // @return {CellDisplay}
   getCellDisplay(x, y) {
     const val = this._values.get(x,y),
       state = this._states.get(x,y);
     return CellDisplay(val, state);
   }
 
+  // returns a Grid with CellDisplay values in each cell
+  // @return {Grid<CellDisplay>}
   getCellDisplayGrid() {
     return Grid.reduce(this._values, this._states,
       (val, state) => CellDisplay(val, state));
