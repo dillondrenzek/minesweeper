@@ -9,6 +9,8 @@ export enum CellState {
 }
 
 export interface CellProps {
+  onClick: () => void;
+  onRightClick: () => void;
   state: CellState;
   value: CellValue;
 }
