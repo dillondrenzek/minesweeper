@@ -45,7 +45,7 @@ describe('Cell', () => {
 describe('useCell', () => {
   describe('incrementValue', () => {
 
-    it('increments the value by 1', () => {
+    it('increments the value by 1 by default', () => {
       const { result } = renderHook(() => useCell());
       const initialValue = result.current.value;
 
@@ -55,6 +55,31 @@ describe('useCell', () => {
 
       expect(typeof result.current.value).toBe('number');
       expect(result.current.value).toBe(initialValue + 1);
+    });
+  });
+
+  describe('toggleFlag', () => {
+    it('toggles the flag value', () => {
+      const { result } = renderHook(() => useCell());
+
+      // initially not flagged
+      expect(result.current.state).toEqual(CellState.Covered);
+      expect(result.current.state).not.toEqual(CellState.Flagged);
+      
+      // Toggle flag 'on'
+      actHook(() => {
+        result.current.toggleFlag();
+      });
+      
+      expect(result.current.state).not.toEqual(CellState.Covered);
+      expect(result.current.state).toEqual(CellState.Flagged);
+
+      // Toggle flag back 'off'
+      actHook(() => {
+        result.current.toggleFlag();
+      });
+
+      expect(result.current.state).toEqual(CellState.Covered);
     });
   });
 });

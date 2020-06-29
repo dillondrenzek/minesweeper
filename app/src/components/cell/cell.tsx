@@ -3,20 +3,27 @@ import React, { useState } from 'react';
 export type CellValue = number;
 
 export enum CellState {
-  Uncovered,
-  Covered,
-  Flagged
+  Uncovered = 'uncovered',
+  Covered = 'covered',
+  Flagged = 'flagged'
 }
 
 export const useCell = () => {
-  const [cellState, setCellState] = useState<CellState>(CellState.Uncovered);
+  const [cellState, setCellState] = useState<CellState>(CellState.Covered);
   const [cellValue, setCellValue] = useState<CellValue>(0);
 
   return {
     state: cellState,
     value: cellValue,
     incrementValue: () => {
-      
+      setCellValue(cellValue + 1);
+    },
+    toggleFlag: () => {
+      if (cellState === CellState.Covered) {
+        setCellState(CellState.Flagged);
+      } else if (cellState === CellState.Flagged) {
+        setCellState(CellState.Covered);
+      }
     }
   }
 };
