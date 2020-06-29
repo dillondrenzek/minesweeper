@@ -1,5 +1,5 @@
 // A base class for building and interacting with a two-dimensional array
-export class Grid<T> {
+export class GridHelper<T> {
 
   constructor(private matrix: T[][]) {
     // if (!matrix) throw new Error('Cannot construct Grid with undefined constructor property.');

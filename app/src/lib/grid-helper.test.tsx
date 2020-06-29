@@ -1,10 +1,10 @@
-import { Grid } from './grid';
+import { GridHelper } from './grid-helper';
 
-describe('Grid', () => {
+describe('GridHelper', () => {
 
   describe('get', () => {
     it('returns the correct value', () => {
-      const grid = new Grid([
+      const grid = new GridHelper([
         [1,2,3],
         [4,5,6]
       ]);
@@ -15,7 +15,7 @@ describe('Grid', () => {
 
   describe('set', () => {
     it('sets the correct value', () => {
-      const grid = new Grid([
+      const grid = new GridHelper([
         [0, 0, 0],
         [0, 0, 0]
       ]);

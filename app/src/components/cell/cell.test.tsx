@@ -1,8 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { render, RenderResult, fireEvent } from '@testing-library/react';
-import { Cell, CellState } from './cell';
-import { findDOMNode } from 'react-dom';
+import { renderHook, act as actHook } from '@testing-library/react-hooks';
+import { Cell, CellState, useCell } from './cell';
 
 describe('Cell', () => {
   let result: RenderResult;
@@ -40,4 +40,21 @@ describe('Cell', () => {
     expect(rightClickHandler).toHaveBeenCalled();
   });
 
+});
+
+describe('useCell', () => {
+  describe('incrementValue', () => {
+
+    it('increments the value by 1', () => {
+      const { result } = renderHook(() => useCell());
+      const initialValue = result.current.value;
+
+      actHook(() => {
+        result.current.incrementValue();
+      });
+
+      expect(typeof result.current.value).toBe('number');
+      expect(result.current.value).toBe(initialValue + 1);
+    });
+  });
 });

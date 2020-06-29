@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export type CellValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'M';
+export type CellValue = number;
 
 export enum CellState {
   Uncovered,
   Covered,
   Flagged
 }
+
+export const useCell = () => {
+  const [cellState, setCellState] = useState<CellState>(CellState.Uncovered);
+  const [cellValue, setCellValue] = useState<CellValue>(0);
+
+  return {
+    state: cellState,
+    value: cellValue,
+    incrementValue: () => {
+      
+    }
+  }
+};
+
 
 export interface CellProps {
   onClick: () => void;
