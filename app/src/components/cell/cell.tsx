@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import './cell.scss';
 
 export type CellValue = number;
 
@@ -8,21 +9,30 @@ export enum CellState {
   Flagged = 'flagged'
 }
 
-export const useCell = () => {
-  const [cellState, setCellState] = useState<CellState>(CellState.Covered);
-  const [cellValue, setCellValue] = useState<CellValue>(0);
+export interface ICell {
+  state: CellState;
+  value: CellValue;
+}
+
+export const cell = () => {
+  let _state = CellState.Covered;
+  let _value = 0;
 
   return {
-    state: cellState,
-    value: cellValue,
+    get state() {
+      return _state;
+    },
+    get value() {
+      return _value;
+    },
     incrementValue: () => {
-      setCellValue(cellValue + 1);
+      _value += 1;
     },
     toggleFlag: () => {
-      if (cellState === CellState.Covered) {
-        setCellState(CellState.Flagged);
-      } else if (cellState === CellState.Flagged) {
-        setCellState(CellState.Covered);
+      if (_state === CellState.Covered) {
+        _state = CellState.Flagged;
+      } else if (_state === CellState.Flagged) {
+        _state = CellState.Covered;
       }
     }
   }
@@ -30,28 +40,36 @@ export const useCell = () => {
 
 
 export interface CellProps {
-  onClick: () => void;
-  onRightClick: () => void;
+  onClick: (ev?: React.MouseEvent) => void;
+  onShiftClick: (ev?: React.MouseEvent) => void;
   state: CellState;
   value: CellValue;
 }
 
 export const Cell: React.FunctionComponent<CellProps> = (props) => {
-  const { onClick, onRightClick, state, value } = props;
+  const { onClick, onShiftClick, state, value } = props;
 
-  const handleClick = () => {
-    if (typeof onClick === 'function') {
-      onClick();
+  const handleClick = (ev: React.MouseEvent) => {
+    if (typeof onShiftClick === 'function' && ev.shiftKey) {
+      onShiftClick(ev);
+    } else if (typeof onClick === 'function') {
+      onClick(ev);
     }
   };
-  const handleRightClick = () => {
-    if (typeof onRightClick === 'function') {
-      onRightClick();
+
+  const cellStateClassName = (() => {
+    switch (state) {
+      case CellState.Covered:
+        return 'covered';
+      case CellState.Flagged:
+        return 'flagged';
+      case CellState.Uncovered:
+        return 'uncovered';
     }
-  };
+  })();
 
   return (
-    <div onClick={handleClick} onContextMenu={handleRightClick}>
+    <div className={`Cell ${cellStateClassName}`} onClick={handleClick}>
       {state === CellState.Uncovered ? (
         <div>{value}</div>
       ) : null}

@@ -15,6 +15,10 @@ export class GridHelper<T> {
     return this.matrix.length;
   }
 
+  public get rows() {
+    return this.matrix;
+  }
+
   // @param { number } x
   // @param { number } y
   // @return { T }
@@ -27,5 +31,17 @@ export class GridHelper<T> {
   // @param { T } val
   public set(x: number, y: number, val: T) {
     this.matrix[y][x] = val;
+  }
+
+  public static build<T>(width: number, height: number, valueForCell: (x: number, y: number) => T) {
+    let grid = [];
+    for (let y = 0; y < height; y++) {
+      let row = [];
+      for (let x = 0; x < width; x++) {
+        row.push(valueForCell(x, y));
+      }
+      grid.push(row);
+    }
+    return new GridHelper<T>(grid)
   }
 }

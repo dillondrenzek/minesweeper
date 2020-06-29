@@ -1,0 +1,11 @@
+.Grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
+  .row {
+    display: flex;
+    flex: 0 1 auto;
+  }
+
+}
