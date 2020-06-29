@@ -16,9 +16,21 @@ export interface CellProps {
 }
 
 export const Cell: React.FunctionComponent<CellProps> = (props) => {
-  const { state, value } = props;
+  const { onClick, onRightClick, state, value } = props;
+
+  const handleClick = () => {
+    if (typeof onClick === 'function') {
+      onClick();
+    }
+  };
+  const handleRightClick = () => {
+    if (typeof onRightClick === 'function') {
+      onRightClick();
+    }
+  };
+
   return (
-    <div>
+    <div onClick={handleClick} onContextMenu={handleRightClick}>
       {state === CellState.Uncovered ? (
         <div>{value}</div>
       ) : null}
