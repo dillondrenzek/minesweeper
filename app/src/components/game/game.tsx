@@ -10,5 +10,5 @@ export interface GameProps {
 }
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
-  return null;
+  return <></>;
 }
