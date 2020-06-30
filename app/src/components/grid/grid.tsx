@@ -7,6 +7,8 @@ import './grid.scss';
 export interface GridProps {
   width: number;
   height: number;
+  onClickCell?: (cellX: number, cellY: number) => void;
+  onShiftClickCell?: (cellX: number, cellY: number) => void;
 }
 
 export const Grid: React.FunctionComponent<GridProps> = (props) => {
@@ -17,17 +19,21 @@ export const Grid: React.FunctionComponent<GridProps> = (props) => {
   // const [grid] = useGrid(width, height);
 
   const clickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
-    console.log('click', cellX, cellY);
+    const { onClickCell } = props;
     const currentCell = grid.get(cellX, cellY);
     grid.set(cellX, cellY, {
       ...currentCell,
       state: CellState.Uncovered
     });
     setGrid(new GridHelper(grid.rows));
+
+    if (typeof onClickCell === 'function') {
+      onClickCell(cellX, cellY);
+    }
   }
 
   const shiftClickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
-    console.log('shift click', cellX, cellY);
+    const { onShiftClickCell } = props;
     const currentCell = grid.get(cellX, cellY);
     grid.set(cellX, cellY, {
       ...currentCell,
@@ -38,6 +44,10 @@ export const Grid: React.FunctionComponent<GridProps> = (props) => {
           : currentCell.state
     });
     setGrid(new GridHelper(grid.rows));
+
+    if (typeof onShiftClickCell === 'function') {
+      onShiftClickCell(cellX, cellY);
+    }
   }
 
   return (
