@@ -1,7 +1,8 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { render, RenderResult, fireEvent } from '@testing-library/react';
-import { Cell, CellState } from './cell';
+import { CellState } from '../../types/cell';
+import { Cell } from './cell';
 
 describe('Cell', () => {
   let result: RenderResult;
