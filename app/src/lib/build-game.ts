@@ -7,14 +7,23 @@ export const buildCellValues = (width: number, height: number, mines: number[][]
   let values: GridHelper<CellValue> = GridHelper.build(width, height, () => 0);
 
   mines.forEach((mineCoords) => {
-    values.set(mineCoords[0], mineCoords[1], 'M');
+    const mineX = mineCoords[0];
+    const mineY = mineCoords[1];
+    values.set(mineX, mineY, 'M');
 
-    // if X is greater than 0
-    if (mineCoords[0] > 0) {
-      
-    } 
+    for (let deltaX = -1; deltaX <= 1; deltaX++) {
+      for (let deltaY = -1; deltaY <= 1; deltaY++) {
+        if (deltaX !== 0 || deltaY !== 0) {
+          const x = mineX + deltaX;
+          const y = mineY + deltaY;
+          const value = values.get(x, y);
+          if (typeof value === 'number') {
+            values.set(x, y, value + 1);
+          }
+        }
+      }
+    }
   });
-
 
   return values;
 }
