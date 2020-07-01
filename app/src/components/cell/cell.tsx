@@ -1,7 +1,7 @@
 import React from 'react';
 import './cell.scss';
 
-export type CellValue = number;
+export type CellValue = number | 'M';
 
 export enum CellState {
   Uncovered = 'uncovered',
@@ -13,31 +13,6 @@ export interface ICell {
   state: CellState;
   value: CellValue;
 }
-
-export const cell = () => {
-  let _state = CellState.Covered;
-  let _value = 0;
-
-  return {
-    get state() {
-      return _state;
-    },
-    get value() {
-      return _value;
-    },
-    incrementValue: () => {
-      _value += 1;
-    },
-    toggleFlag: () => {
-      if (_state === CellState.Covered) {
-        _state = CellState.Flagged;
-      } else if (_state === CellState.Flagged) {
-        _state = CellState.Covered;
-      }
-    }
-  }
-};
-
 
 export interface CellProps {
   onClick: (ev?: React.MouseEvent) => void;

@@ -23,6 +23,9 @@ export class GridHelper<T> {
   // @param { number } y
   // @return { T }
   public get(x: number, y: number): T {
+    if (x < 0 || y < 0 || this.matrix[y] == null || this.matrix[y][x] == null) {
+      return null;
+    }
     return this.matrix[y][x];
   }
 
@@ -30,6 +33,9 @@ export class GridHelper<T> {
   // @param { number } y
   // @param { T } val
   public set(x: number, y: number, val: T) {
+    if (x < 0 || y < 0 || !this.matrix[y]) {
+      return;
+    }
     this.matrix[y][x] = val;
   }
 
