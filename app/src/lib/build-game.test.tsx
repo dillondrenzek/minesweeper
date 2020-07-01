@@ -1,6 +1,6 @@
 import React from 'react';
 import { buildGame, buildCellValues } from './build-game';
-import { MINE } from '../components/cell/cell';
+import { MINE } from '../types/cell';
 
 
 describe('buildCellValues', () => {

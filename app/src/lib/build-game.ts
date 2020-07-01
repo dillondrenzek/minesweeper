@@ -1,5 +1,5 @@
 
-import { ICell, CellValue } from '../components/cell/cell';
+import { ICell, CellValue } from '../types/cell';
 import { GridHelper } from './grid-helper';
 
 export const buildCellValues = (width: number, height: number, mines: number[][]): GridHelper<CellValue> => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Cell, ICell, CellState } from '../cell/cell';
+import { Cell } from '../cell/cell';
 import { GridHelper } from '../../lib/grid-helper';
+import { CellState, ICell } from '../../types/cell';
 
 import './grid.scss';
 
