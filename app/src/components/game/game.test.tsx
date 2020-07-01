@@ -1,11 +1,8 @@
 import React from 'react';
-import { buildGame } from '../../lib/build-game';
+import { Game } from './game';
 
 describe('Game', () => {
-  xit('is true', () => { expect(true).toBe(false); })
-});
-
-
-describe('buildGame', () => {
-  
+  it('does not throw', () => {
+    expect(() => <Game />).not.toThrow();
+  });
 });
