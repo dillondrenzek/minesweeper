@@ -1,33 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Cell } from '../cell/cell';
 import { GridHelper } from '../../lib/grid-helper';
-import { CellState, ICell } from '../../types/cell';
 
 import './grid.scss';
 
 export interface GridProps {
-  width: number;
-  height: number;
+  grid: GridHelper;
   onClickCell?: (cellX: number, cellY: number) => void;
   onShiftClickCell?: (cellX: number, cellY: number) => void;
 }
 
 export const Grid: React.FunctionComponent<GridProps> = (props) => {
-  const { width, height } = props;
-
-  const [grid, setGrid] = useState<GridHelper<ICell>>(GridHelper.build(width, height, () => ({state: CellState.Covered, value: 0})));
-
-  // const [grid] = useGrid(width, height);
+  const { grid } = props;
 
   const clickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
     const { onClickCell } = props;
-    const currentCell = grid.get(cellX, cellY);
-    grid.set(cellX, cellY, {
-      ...currentCell,
-      state: CellState.Uncovered
-    });
-    setGrid(new GridHelper(grid.rows));
-
     if (typeof onClickCell === 'function') {
       onClickCell(cellX, cellY);
     }
@@ -35,17 +22,6 @@ export const Grid: React.FunctionComponent<GridProps> = (props) => {
 
   const shiftClickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
     const { onShiftClickCell } = props;
-    const currentCell = grid.get(cellX, cellY);
-    grid.set(cellX, cellY, {
-      ...currentCell,
-      state: (currentCell.state === CellState.Covered) 
-        ? CellState.Flagged 
-        : (currentCell.state === CellState.Flagged) 
-          ? CellState.Covered 
-          : currentCell.state
-    });
-    setGrid(new GridHelper(grid.rows));
-
     if (typeof onShiftClickCell === 'function') {
       onShiftClickCell(cellX, cellY);
     }

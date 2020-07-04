@@ -1,24 +1,24 @@
 
-import { ICell, CellValue } from '../types/cell';
+import { ICell, CellValue, CellState, MINE } from '../types/cell';
 import { GridHelper } from './grid-helper';
 
-export const buildCellValues = (width: number, height: number, mines: number[][]): GridHelper<CellValue> => {
+export const buildCellValues = (width: number, height: number, mines: number[][]): GridHelper<{ value: CellValue }> => {
 
-  let values: GridHelper<CellValue> = GridHelper.build(width, height, () => 0);
-
+  let values: GridHelper<{ value: CellValue }> = GridHelper.build(width, height, () => ({ value: 0 }));
+  
   mines.forEach((mineCoords) => {
     const mineX = mineCoords[0];
     const mineY = mineCoords[1];
-    values.set(mineX, mineY, 'M');
-
+    values.set(mineX, mineY, { value: MINE });
+    
     for (let deltaX = -1; deltaX <= 1; deltaX++) {
       for (let deltaY = -1; deltaY <= 1; deltaY++) {
         if (deltaX !== 0 || deltaY !== 0) {
           const x = mineX + deltaX;
           const y = mineY + deltaY;
-          const value = values.get(x, y);
-          if (typeof value === 'number') {
-            values.set(x, y, value + 1);
+          const cell = values.get(x, y);
+          if (typeof cell?.value === 'number') {
+            values.set(x, y, { value: cell.value + 1 });
           }
         }
       }
@@ -28,7 +28,8 @@ export const buildCellValues = (width: number, height: number, mines: number[][]
   return values;
 }
 
-export const buildGame = (width: number, height: number, mines: number[][]) => {
-
-
+export const buildGame = (width: number, height: number, mines: number[][]): GridHelper<ICell> => {
+  const cellStates = GridHelper.build(width, height, (x, y) => ({ state: CellState.Covered }));
+  const cellValues = buildCellValues(width, height, mines);
+  return GridHelper.merge(cellStates, cellValues);
 }

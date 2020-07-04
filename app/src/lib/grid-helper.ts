@@ -1,5 +1,5 @@
 // A base class for building and interacting with a two-dimensional array
-export class GridHelper<T> {
+export class GridHelper<T = any> {
 
   constructor(private matrix: T[][]) {
     // if (!matrix) throw new Error('Cannot construct Grid with undefined constructor property.');
@@ -49,5 +49,20 @@ export class GridHelper<T> {
       grid.push(row);
     }
     return new GridHelper<T>(grid)
+  }
+
+  public static copy<T>(helper: GridHelper<T>): GridHelper<T> {
+    return new GridHelper(helper.rows);
+  }
+
+  public static merge<T = any, U = any>(gridA: GridHelper<T>, gridB: GridHelper<U>): GridHelper<T & U> {
+    if (gridA.width !== gridB.width || gridA.height !== gridB.height) {
+      throw new Error('GridHelpers are not the same size');
+    }
+    let result = GridHelper.build<T & U>(gridA.width, gridA.height, (x, y) => ({
+      ...gridA.get(x, y),
+      ...gridB.get(x, y)
+    }));
+    return result;
   }
 }

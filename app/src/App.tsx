@@ -1,10 +1,10 @@
 import React from 'react';
-import { Grid } from './components/grid/grid';
+import { Game } from './components/game/game';
 import './App.scss';
 
 function App() {
   return (
-    <Grid width={10} height={15} />
+    <Game width={10} height={15} />
   );
 }
 

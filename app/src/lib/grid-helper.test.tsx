@@ -56,7 +56,7 @@ describe('GridHelper', () => {
     });
   });  
 
-  describe('width', () => {
+  it('width', () => {
     const grid = new GridHelper([
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
@@ -66,7 +66,7 @@ describe('GridHelper', () => {
     expect(grid.width).toEqual(5);
   });
 
-  describe('height', () => {
+  it('height', () => {
     const grid = new GridHelper([
       [0,0,0,0,0],
       [0,0,0,0,0],
@@ -76,4 +76,32 @@ describe('GridHelper', () => {
     expect(grid.height).toEqual(3);
   });
   
+  describe('merge', () => {
+    it('throws an error if the two widths are different', () => {
+      const a = GridHelper.build(3, 5, (x, y) => ({ x, y }));
+      const b = GridHelper.build(2, 5, (x, y) => ({ a: x, b: y }));
+      expect(() => { return GridHelper.merge(a, b); }).toThrow();
+    });
+    it('throws an error if the two heights are different', () => {
+      const a = GridHelper.build(3, 4, (x, y) => ({ x, y }));
+      const b = GridHelper.build(3, 5, (x, y) => ({ a: x, b: y }));
+      expect(() => { return GridHelper.merge(a, b); }).toThrow();
+    });
+    it('result is same size', () => {
+      const a = GridHelper.build(3, 5, (x, y) => ({ x, y }));
+      const b = GridHelper.build(3, 5, (x, y) => ({ a: x, b: y }));
+      expect(GridHelper.merge(a, b).width).toEqual(3);
+      expect(GridHelper.merge(a, b).height).toEqual(5);
+    });
+    it('result cells have a merged type', () => {
+      const a = GridHelper.build(3, 5, (x, y) => ({ x, y }));
+      const b = GridHelper.build(3, 5, (x, y) => ({ a: x, b: y }));
+      const result = GridHelper.merge(a, b);
+      const subjectCell = result.get(0,0);
+      expect(subjectCell.a).toBeDefined();
+      expect(subjectCell.b).toBeDefined();
+      expect(subjectCell.x).toBeDefined();
+      expect(subjectCell.y).toBeDefined();
+    });
+  });
 });
