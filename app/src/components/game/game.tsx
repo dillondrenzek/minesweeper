@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { GridHelper } from '../../lib/grid-helper';
+import { buildGame, generateMines } from '../../lib/build-game';
 import { ICell, CellState } from '../../types/cell';
 import { Grid } from '../grid/grid';
 
 
 export interface GameProps {
-  height?: number;
-  width?: number;
+  height: number;
+  width: number;
+  numMines: number;
 }
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
-  const { width, height } = props;
-  const [grid, setGrid] = useState<GridHelper<ICell>>(GridHelper.build(width, height, () => ({ state: CellState.Covered, value: 0 })));
+  const { numMines, width, height } = props;
+  const mines = generateMines(numMines, width, height);
+  const [grid, setGrid] = useState<GridHelper<ICell>>(buildGame(width, height, mines));
 
   const clickHandler = (cellX: number, cellY: number)  => {
     const currentCell = grid.get(cellX, cellY);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { buildGame, buildCellValues } from './build-game';
+import { buildGame, buildCellValues, generateMines } from './build-game';
 import { MINE } from '../types/cell';
 
 
@@ -58,4 +58,18 @@ describe('buildGame', () => {
     expect(result.get(2,3).value).toEqual(MINE);
     expect(result.get(3,1).value).toEqual(MINE);
   });
+});
+
+describe('generateMines', () => {
+
+  it('generates the correct number of mines', () => {
+    expect(generateMines(10, 10, 10).length).toEqual(10);
+  });
+
+  it('throws an error when too many mines are requested', () => {
+    expect(() => generateMines(10, 3, 3)).toThrow();
+    expect(() => generateMines(9, 3, 3)).toThrow();
+    expect(() => generateMines(8, 3, 3)).not.toThrow();
+  });
+
 });
