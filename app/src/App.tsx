@@ -4,7 +4,7 @@ import './App.scss';
 
 function App() {
   return (
-    <Game width={5} height={7} numMines={10} />
+    <Game width={10} height={10} numMines={10} />
   );
 }
 
