@@ -3,6 +3,7 @@ import { GridHelper } from '../../lib/grid-helper';
 import { buildGame, generateMines } from '../../lib/build-game';
 import { ICell, CellState } from '../../types/cell';
 import { Grid } from '../grid/grid';
+import { uncover } from '../../lib/game-helper';
 
 
 export interface GameProps {
@@ -17,11 +18,8 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
   const [grid, setGrid] = useState<GridHelper<ICell>>(buildGame(width, height, mines));
 
   const clickHandler = (cellX: number, cellY: number)  => {
-    const currentCell = grid.get(cellX, cellY);
-    grid.set(cellX, cellY, {
-      ...currentCell,
-      state: CellState.Uncovered
-    });
+    // const currentCell = grid.get(cellX, cellY);
+    uncover(grid, cellX, cellY);
     setGrid(GridHelper.copy(grid));
   };
 
