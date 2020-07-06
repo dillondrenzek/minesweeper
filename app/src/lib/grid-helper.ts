@@ -39,6 +39,17 @@ export class GridHelper<T = any> {
     this.matrix[y][x] = val;
   }
 
+  public print(toString: (cell: T) => string = (cell: T) => cell.toString()): string {
+    let str = '';
+    this.rows.forEach((row) => {
+      row.forEach((cell) => {
+        str += `${toString(cell)} `
+      });
+      str += '\n';
+    });
+    return str;
+  }
+
   public static build<T>(width: number, height: number, valueForCell: (x: number, y: number) => T) {
     let grid = [];
     for (let y = 0; y < height; y++) {
