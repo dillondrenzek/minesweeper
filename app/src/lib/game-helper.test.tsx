@@ -25,7 +25,7 @@ describe('uncover', () => {
     expect(helper.get(0,2).state).toEqual(CellState.Covered);
     expect(helper.get(1,2).state).toEqual(CellState.Covered);
     expect(helper.get(2,2).state).toEqual(CellState.Covered);
-    expect(helper.get(3,2).state).toEqual(CellState.Uncovered);
+    expect(helper.get(3,2).state).toEqual(CellState.Covered);
 
   });
 
@@ -58,10 +58,10 @@ describe('uncover', () => {
     uncover(helper, 1, 2);
 
     expect(helper.get(1,2).state).toEqual(CellState.Uncovered);
-    expect(helper.get(0,2).state).toEqual(CellState.Uncovered);
-    expect(helper.get(2,2).state).toEqual(CellState.Uncovered);
-    expect(helper.get(1,1).state).toEqual(CellState.Uncovered);
-    expect(helper.get(1,3).state).toEqual(CellState.Uncovered);
+    expect(helper.get(0,2).state).toEqual(CellState.Covered);
+    expect(helper.get(2,2).state).toEqual(CellState.Covered);
+    expect(helper.get(1,1).state).toEqual(CellState.Covered);
+    expect(helper.get(1,3).state).toEqual(CellState.Covered);
 
   });
 
