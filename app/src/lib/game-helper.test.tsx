@@ -47,6 +47,24 @@ describe('uncover', () => {
 
   });
 
+  it('uncovers a mine, does not uncover additional cells', () => {
+    let helper: GameHelper = new GridHelper<ICell>([
+      [{ value: 0, state: CellState.Covered },{ value: 0, state: CellState.Covered },{ value: 1, state: CellState.Covered },{ value: MINE, state: CellState.Covered }],
+      [{ value: 1, state: CellState.Covered },{ value: 1, state: CellState.Covered },{ value: 2, state: CellState.Covered },{ value: 1, state: CellState.Covered }],
+      [{ value: 1, state: CellState.Covered },{ value: MINE, state: CellState.Covered },{ value: 1, state: CellState.Covered },{ value: 0, state: CellState.Covered }],
+      [{ value: 1, state: CellState.Covered },{ value: 1, state: CellState.Covered },{ value: 1, state: CellState.Covered },{ value: 0, state: CellState.Covered }]
+    ]);
+
+    uncover(helper, 1, 2);
+
+    expect(helper.get(1,2).state).toEqual(CellState.Uncovered);
+    expect(helper.get(0,2).state).toEqual(CellState.Uncovered);
+    expect(helper.get(2,2).state).toEqual(CellState.Uncovered);
+    expect(helper.get(1,1).state).toEqual(CellState.Uncovered);
+    expect(helper.get(1,3).state).toEqual(CellState.Uncovered);
+
+  });
+
 });
 
 describe('setCellState', () => {

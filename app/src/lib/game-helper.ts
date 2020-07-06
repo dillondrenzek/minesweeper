@@ -5,8 +5,6 @@ export type GameHelper = GridHelper<ICell>;
 
 export function uncover(helper: GameHelper, cellX: number, cellY: number) {
 
-}
-
-export function setCellState(helper: GameHelper, cellX: number, cellY: number, state: CellState) {
   
+
 }
