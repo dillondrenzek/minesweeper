@@ -33,7 +33,7 @@ export const Cell: React.FunctionComponent<CellProps> = (props) => {
 
   return (
     <div className={`Cell ${cellStateClassName}`} onClick={handleClick}>
-      {state === CellState.Uncovered ? (
+      {state === CellState.Uncovered && value !== 0 ? (
         <div>{value}</div>
       ) : null}
     </div>

@@ -26,6 +26,13 @@ describe('Cell', () => {
     expect(result.baseElement.textContent).toContain('3');
   });
 
+  it('does not show the cell value when it is 0', () => {
+    act(() => {
+      result = render(<Cell state={CellState.Uncovered} value={0} onClick={null} onShiftClick={() => null} />);
+    });
+    expect(result.baseElement.textContent).not.toContain('0');
+  });
+
   it('emits a click event', () => {
     const clickHandler = jest.fn();
     result = render(<Cell state={CellState.Uncovered} value={3} onClick={clickHandler} onShiftClick={() => null} />);
