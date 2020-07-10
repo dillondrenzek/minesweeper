@@ -18,7 +18,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
   const [grid, setGrid] = useState<GridHelper<ICell>>(buildGame(width, height, mines));
 
   const clickHandler = (cellX: number, cellY: number)  => {
-    // const currentCell = grid.get(cellX, cellY);
     uncover(grid, cellX, cellY);
     setGrid(GridHelper.copy(grid));
   };
