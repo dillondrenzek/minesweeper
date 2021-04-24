@@ -1,6 +1,5 @@
 import { GridHelper } from './grid-helper';
 import { ICell, CellState } from '../types/cell';
-import { Cell } from '../components/cell/cell';
 
 export type GameHelper = GridHelper<ICell>;
 
