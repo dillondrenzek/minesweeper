@@ -9,7 +9,7 @@ export interface CellProps {
   value: CellValue;
 }
 
-export const Cell: React.FunctionComponent<CellProps> = (props) => {
+export function Cell(props: CellProps) {
   const { onClick, onShiftClick, state, value } = props;
 
   const handleClick = (ev: React.MouseEvent) => {
