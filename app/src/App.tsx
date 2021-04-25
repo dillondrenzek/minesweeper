@@ -3,8 +3,14 @@ import { Game } from './components/game/game';
 import './App.scss';
 
 function App() {
+  const width = 10;
+  const height = 10;
+  const numMines = 10;
   return (
-    <Game width={10} height={10} numMines={10} />
+    <>
+      <Game width={width} height={height} numMines={numMines} />
+      <div>Width: {width} - Height: {height} - Number of Mines: {numMines}</div>
+    </>
   );
 }
 
