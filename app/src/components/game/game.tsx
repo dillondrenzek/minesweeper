@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { GridHelper } from '../../lib/grid-helper';
 import { buildGame, generateMines } from '../../lib/build-game';
 import { ICell, CellState } from '../../types/cell';
@@ -46,7 +46,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
   return (
     <>
       <Grid 
-        grid={grid}
+        grid={grid.rows}
         onClickCell={clickHandler}
         onShiftClickCell={shiftClickHandler}    
       />

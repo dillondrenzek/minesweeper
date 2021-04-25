@@ -1,11 +1,11 @@
 import React from 'react';
+import { ICell } from '../../types/cell';
 import { Cell } from '../cell/cell';
-import { GridHelper } from '../../lib/grid-helper';
 
 import './grid.scss';
 
 export interface GridProps {
-  grid: GridHelper;
+  grid: ICell[][];
   onClickCell?: (cellX: number, cellY: number) => void;
   onShiftClickCell?: (cellX: number, cellY: number) => void;
 }
@@ -29,7 +29,7 @@ export const Grid: React.FunctionComponent<GridProps> = (props) => {
 
   return (
     <div className='Grid'>
-      {grid.rows.map((row, y) => (
+      {grid.map((row, y) => (
         <div className='row' key={y}>
           {row.map((cell, x) => (
             <Cell 
