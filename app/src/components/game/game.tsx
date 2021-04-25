@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GridHelper } from '../../lib/grid-helper';
 import { buildGame, generateMines } from '../../lib/build-game';
 import { ICell, CellState } from '../../types/cell';
 import { Grid } from '../grid/grid';
 import { uncover } from '../../lib/game-helper';
 
+function start(numMines: number, width: number, height: number): GridHelper<ICell> {
+  const mines = generateMines(numMines, width, height);
+  return buildGame(width, height, mines);
+}
 
 export interface GameProps {
   height: number;
@@ -14,8 +18,12 @@ export interface GameProps {
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
   const { numMines, width, height } = props;
-  const mines = generateMines(numMines, width, height);
-  const [grid, setGrid] = useState<GridHelper<ICell>>(buildGame(width, height, mines));
+  
+  const [grid, setGrid] = useState<GridHelper<ICell>>(start(numMines, width, height));
+
+  const handleClickReset = () => {
+    setGrid(start(numMines, width, height));
+  };
 
   const clickHandler = (cellX: number, cellY: number)  => {
     uncover(grid, cellX, cellY);
@@ -36,10 +44,13 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
   };
 
   return (
-    <Grid 
-      grid={grid}
-      onClickCell={clickHandler}
-      onShiftClickCell={shiftClickHandler}    
-    />
+    <>
+      <Grid 
+        grid={grid}
+        onClickCell={clickHandler}
+        onShiftClickCell={shiftClickHandler}    
+      />
+      <button onClick={handleClickReset}>Reset</button>
+    </>
   );
 }
