@@ -1,6 +1,6 @@
-import React from 'react';
-import './cell.scss';
-import { CellState, CellValue } from '../../types/cell';
+import React from "react";
+import "./cell.scss";
+import { CellState, CellValue } from "../../types/cell";
 
 export interface CellProps {
   onClick: (ev?: React.MouseEvent) => void;
@@ -13,9 +13,11 @@ export function Cell(props: CellProps) {
   const { onClick, onShiftClick, state, value } = props;
 
   const handleClick = (ev: React.MouseEvent) => {
-    if (typeof onShiftClick === 'function' && ev.shiftKey) {
+    if (typeof onShiftClick === "function" && ev.shiftKey) {
+      console.log("shift click");
       onShiftClick(ev);
-    } else if (typeof onClick === 'function') {
+    } else if (typeof onClick === "function") {
+      console.log("click");
       onClick(ev);
     }
   };
@@ -23,19 +25,17 @@ export function Cell(props: CellProps) {
   const cellStateClassName = (() => {
     switch (state) {
       case CellState.Covered:
-        return 'covered';
+        return "covered";
       case CellState.Flagged:
-        return 'flagged';
+        return "flagged";
       case CellState.Uncovered:
-        return 'uncovered';
+        return "uncovered";
     }
   })();
 
   return (
     <div className={`Cell ${cellStateClassName}`} onClick={handleClick}>
-      {state === CellState.Uncovered && value !== 0 ? (
-        <div>{value}</div>
-      ) : null}
+      {state === CellState.Uncovered && value !== 0 ? <div>{value}</div> : null}
     </div>
   );
 }

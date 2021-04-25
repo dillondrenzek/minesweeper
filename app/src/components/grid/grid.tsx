@@ -1,8 +1,8 @@
-import React from 'react';
-import { ICell } from '../../types/cell';
-import { Cell } from '../cell/cell';
+import React from "react";
+import { ICell } from "../../types/cell";
+import { Cell } from "../cell/cell";
 
-import './grid.scss';
+import "./grid.scss";
 
 export interface GridProps {
   grid: ICell[][];
@@ -13,35 +13,39 @@ export interface GridProps {
 export const Grid: React.FunctionComponent<GridProps> = (props) => {
   const { grid } = props;
 
-  const clickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
+  const clickHandler = (cellX: number, cellY: number) => (
+    ev: React.MouseEvent
+  ) => {
     const { onClickCell } = props;
-    if (typeof onClickCell === 'function') {
+    if (typeof onClickCell === "function") {
       onClickCell(cellX, cellY);
     }
-  }
+  };
 
-  const shiftClickHandler = (cellX: number, cellY: number) => (ev: React.MouseEvent) => {
+  const shiftClickHandler = (cellX: number, cellY: number) => (
+    ev: React.MouseEvent
+  ) => {
     const { onShiftClickCell } = props;
-    if (typeof onShiftClickCell === 'function') {
+    if (typeof onShiftClickCell === "function") {
       onShiftClickCell(cellX, cellY);
     }
-  }
+  };
 
   return (
-    <div className='Grid'>
+    <div className="Grid">
       {grid.map((row, y) => (
-        <div className='row' key={y}>
+        <div className="row" key={y}>
           {row.map((cell, x) => (
-            <Cell 
+            <Cell
               value={cell.value}
               state={cell.state}
               onClick={clickHandler(x, y)}
               onShiftClick={shiftClickHandler(x, y)}
-              key={x}
+              key={`${x},${y}`}
             />
           ))}
         </div>
       ))}
     </div>
   );
-}
+};
