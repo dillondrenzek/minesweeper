@@ -1,15 +1,7 @@
 {
   "name": "minesweeper",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A re-creation of the classic game on the web Draft: 9/28/17 - Dillon",
-  "main": "minesweeper.js",
-  "scripts": {
-    "start": "node minesweeper.js",
-    "test": "jasmine"
-  },
   "author": "Dillon Drenzek",
-  "license": "ISC",
-  "devDependencies": {
-    "jasmine": "2.8.0"
-  }
+  "license": "ISC"
 }
