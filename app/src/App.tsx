@@ -1,15 +1,22 @@
-import React from 'react';
-import { Game } from './components/game/game';
-import './App.scss';
+import React from "react";
+import { Game } from "./components/game/game";
+import "./App.scss";
+import { GameConfig } from "./types/game";
 
 function App() {
-  const width = 10;
-  const height = 10;
-  const numMines = 10;
+  const config: GameConfig = {
+    width: 10,
+    height: 10,
+    numMines: 10,
+  };
+
   return (
     <>
-      <Game width={width} height={height} numMines={numMines} />
-      <div>Width: {width} - Height: {height} - Number of Mines: {numMines}</div>
+      <Game config={config} />
+      <div>
+        Width: {config.width} - Height: {config.height} - Number of Mines:{" "}
+        {config.numMines}
+      </div>
     </>
   );
 }

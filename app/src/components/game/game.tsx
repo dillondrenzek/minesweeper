@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { GridHelper } from '../../lib/grid-helper';
-import { buildGame, generateMines } from '../../lib/build-game';
-import { ICell, CellState } from '../../types/cell';
-import { Grid } from '../grid/grid';
-import { uncover } from '../../lib/game-helper';
+import React, { useCallback, useEffect, useState } from "react";
+import { GridHelper } from "../../lib/grid-helper";
+import { buildGame, generateMines } from "../../lib/build-game";
+import { ICell, CellState } from "../../types/cell";
+import { Grid } from "../grid/grid";
+import { uncover } from "../../lib/game-helper";
+import { GameConfig } from "../../types/game";
 
-function start(numMines: number, width: number, height: number): GridHelper<ICell> {
+function start(config: GameConfig): GridHelper<ICell> {
+  const { numMines, width, height } = config;
   const mines = generateMines(numMines, width, height);
   return buildGame(width, height, mines);
 }
 
 export interface GameProps {
-  height: number;
-  width: number;
-  numMines: number;
+  config: GameConfig;
 }
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
-  const { numMines, width, height } = props;
-  
-  const [grid, setGrid] = useState<GridHelper<ICell>>(start(numMines, width, height));
+  const { config } = props;
 
-  const handleClickReset = () => {
-    setGrid(start(numMines, width, height));
-  };
+  const [grid, setGrid] = useState<GridHelper<ICell>>(start(config));
 
-  const clickHandler = (cellX: number, cellY: number)  => {
+  const handleClickReset = useCallback(() => {
+    setGrid(start(config));
+  }, [config]);
+
+  const clickHandler = (cellX: number, cellY: number) => {
     uncover(grid, cellX, cellY);
     setGrid(GridHelper.copy(grid));
   };
@@ -34,23 +34,24 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     const currentCell = grid.get(cellX, cellY);
     grid.set(cellX, cellY, {
       ...currentCell,
-      state: (currentCell.state === CellState.Covered) 
-        ? CellState.Flagged 
-        : (currentCell.state === CellState.Flagged) 
-          ? CellState.Covered 
-          : currentCell.state
+      state:
+        currentCell.state === CellState.Covered
+          ? CellState.Flagged
+          : currentCell.state === CellState.Flagged
+          ? CellState.Covered
+          : currentCell.state,
     });
     setGrid(GridHelper.copy(grid));
   };
 
   return (
     <>
-      <Grid 
+      <Grid
         grid={grid}
         onClickCell={clickHandler}
-        onShiftClickCell={shiftClickHandler}    
+        onShiftClickCell={shiftClickHandler}
       />
       <button onClick={handleClickReset}>Reset</button>
     </>
   );
-}
+};
